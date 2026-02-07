@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jirafa Royalties — El 92% de libros en KDP no recuperan la inversión. Esta guía te mete en el 8%.</title>
+<meta name="description" content="Descarga gratis la Guía Jirafa: 47 páginas con el sistema completo para validar, publicar y vender tu libro en Amazon KDP.">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#E88C31">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--naranja:#E88C31;--naranja-hover:#D47A22;--naranja-glow:rgba(232,140,49,.35);--marron:#4A2D23;--marron-light:#6B4A3A;--crema:#F5EFE3;--naranja-claro:#FFF3E6;--white:#FFF;--black:#1A1209}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--crema);color:var(--marron);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+.container--narrow{max-width:780px;margin:0 auto;padding:0 24px}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:200px}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(245,239,227,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(74,45,35,.08);padding:12px 0;transition:box-shadow .3s ease}
+.topbar.scrolled{box-shadow:0 2px 24px rgba(74,45,35,.08)}
+.topbar__inner{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;padding:0 24px}
+.topbar__brand{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.2rem;color:var(--marron);letter-spacing:-.02em}
+.topbar__brand span{color:var(--naranja)}
+.topbar__cta{font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;background:var(--naranja);color:var(--white);padding:10px 22px;border-radius:8px;border:none;cursor:pointer;letter-spacing:.02em;transition:all .2s ease;text-transform:uppercase}
+.topbar__cta:hover{background:var(--naranja-hover);transform:translateY(-1px);box-shadow:0 4px 16px var(--naranja-glow)}
+
+.hero{padding:140px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(232,140,49,.08) 0%,transparent 70%);pointer-events:none}
+.hero__grid{display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center}
+.hero__badge{display:inline-flex;align-items:center;gap:8px;background:var(--naranja-claro);border:1px solid rgba(232,140,49,.2);padding:8px 16px;border-radius:100px;font-size:.82rem;font-weight:600;color:var(--naranja);margin-bottom:24px;animation:fadeInUp .6s ease both}
+.hero__badge::before{content:'🔥';font-size:.9rem}
+.hero__stat{font-family:'Poppins',sans-serif;font-weight:900;font-size:clamp(2.6rem,5vw,3.8rem);line-height:1.05;color:var(--marron);letter-spacing:-.03em;margin-bottom:8px;animation:fadeInUp .6s .1s ease both}
+.hero__stat em{font-style:normal;color:var(--naranja);position:relative}
+.hero__stat em::after{content:'';position:absolute;bottom:4px;left:0;width:100%;height:6px;background:var(--naranja);opacity:.2;border-radius:3px}
+.hero__sub{font-family:'Poppins',sans-serif;font-weight:700;font-size:clamp(1.4rem,2.5vw,1.9rem);line-height:1.2;color:var(--marron);margin-bottom:24px;letter-spacing:-.02em;animation:fadeInUp .6s .2s ease both}
+.hero__desc{font-size:1.1rem;line-height:1.7;color:var(--marron-light);margin-bottom:36px;max-width:540px;animation:fadeInUp .6s .3s ease both}
+.hero__form{animation:fadeInUp .6s .4s ease both}
+.hero__mascot{position:relative;animation:fadeInRight .8s .3s ease both}
+.hero__mascot-img{width:100%;max-width:380px;filter:drop-shadow(0 20px 60px rgba(74,45,35,.15));transition:transform .4s ease}
+.hero__mascot:hover .hero__mascot-img{transform:scale(1.03) rotate(1deg)}
+.hero__mascot-tag{position:absolute;bottom:20px;left:-20px;background:var(--marron);color:var(--crema);font-family:'Poppins',sans-serif;font-weight:700;font-size:.78rem;padding:10px 18px;border-radius:10px;box-shadow:0 8px 30px rgba(74,45,35,.2);transform:rotate(-3deg);letter-spacing:.03em;text-transform:uppercase}
+
+.form-group{display:flex;gap:12px;max-width:480px}
+.form-group__input{flex:1;padding:16px 20px;font-family:'Inter',sans-serif;font-size:1rem;border:2px solid rgba(74,45,35,.12);border-radius:12px;background:var(--white);color:var(--marron);outline:none;transition:all .25s ease}
+.form-group__input::placeholder{color:rgba(74,45,35,.4)}
+.form-group__input:focus{border-color:var(--naranja);box-shadow:0 0 0 4px var(--naranja-glow)}
+.form-group__btn{font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem;background:var(--naranja);color:var(--white);padding:16px 28px;border:none;border-radius:12px;cursor:pointer;white-space:nowrap;transition:all .25s ease;position:relative;overflow:hidden}
+.form-group__btn::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.15);border-radius:50%;transform:translate(-50%,-50%);transition:width .5s ease,height .5s ease}
+.form-group__btn:hover::after{width:300px;height:300px}
+.form-group__btn:hover{background:var(--naranja-hover);transform:translateY(-2px);box-shadow:0 8px 28px var(--naranja-glow)}
+.form-trust{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:.82rem;color:var(--marron-light);opacity:.7}
+.form-trust svg{width:14px;height:14px;flex-shrink:0}
+
+.proof-bar{padding:40px 0;border-top:1px solid rgba(74,45,35,.06);border-bottom:1px solid rgba(74,45,35,.06)}
+.proof-bar__inner{display:flex;justify-content:center;align-items:center;gap:48px;flex-wrap:wrap}
+.proof-bar__item{text-align:center}
+.proof-bar__num{font-family:'Poppins',sans-serif;font-weight:800;font-size:2rem;color:var(--naranja);letter-spacing:-.03em;line-height:1}
+.proof-bar__label{font-size:.82rem;color:var(--marron-light);margin-top:4px;font-weight:500}
+
+.pain{padding:80px 0;background:var(--marron);color:var(--crema);position:relative;overflow:hidden}
+.pain::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23F5EFE3' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+.pain__label{font-family:'Poppins',sans-serif;font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.15em;color:var(--naranja);margin-bottom:20px}
+.pain__title{font-family:'Poppins',sans-serif;font-weight:800;font-size:clamp(1.8rem,3.5vw,2.6rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:32px;max-width:700px}
+.pain__list{list-style:none;display:grid;gap:20px;max-width:700px}
+.pain__item{display:flex;align-items:flex-start;gap:16px;font-size:1.05rem;line-height:1.6;color:rgba(245,239,227,.85)}
+.pain__icon{flex-shrink:0;width:32px;height:32px;background:rgba(232,140,49,.15);border:1px solid rgba(232,140,49,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;margin-top:2px}
+.pain__bottom{margin-top:40px;padding-top:32px;border-top:1px solid rgba(245,239,227,.1);font-family:'Poppins',sans-serif;font-weight:700;font-size:1.2rem;color:var(--naranja)}
+
+.inside{padding:90px 0}
+.section-label{font-family:'Poppins',sans-serif;font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.15em;color:var(--naranja);margin-bottom:16px}
+.section-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:clamp(1.8rem,3.5vw,2.6rem);line-height:1.15;letter-spacing:-.02em;color:var(--marron);margin-bottom:48px;max-width:600px}
+.inside__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.inside__card{background:var(--white);border:1px solid rgba(74,45,35,.06);border-radius:16px;padding:32px;transition:all .3s ease;position:relative;overflow:hidden}
+.inside__card::before{content:'';position:absolute;top:0;left:0;width:4px;height:0;background:var(--naranja);border-radius:0 0 4px 0;transition:height .4s ease}
+.inside__card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(74,45,35,.08);border-color:rgba(232,140,49,.15)}
+.inside__card:hover::before{height:100%}
+.inside__page{font-family:'Poppins',sans-serif;font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--naranja);margin-bottom:12px;opacity:.8}
+.inside__card-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.15rem;color:var(--marron);margin-bottom:10px;line-height:1.3}
+.inside__card-desc{font-size:.92rem;color:var(--marron-light);line-height:1.6}
+
+.founder{padding:90px 0}
+.founder__grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.founder__year{display:grid;grid-template-columns:80px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid rgba(74,45,35,.08)}
+.founder__year:last-child{border-bottom:none}
+.founder__year-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.1rem;color:var(--naranja)}
+.founder__year-text{font-size:.95rem;color:var(--marron-light);line-height:1.6}
+.founder__year-text strong{color:var(--marron);font-weight:600}
+.founder__highlight{background:var(--marron);border-radius:20px;padding:48px;color:var(--crema);position:relative;overflow:hidden}
+.founder__highlight::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(232,140,49,.15) 0%,transparent 70%);pointer-events:none}
+.founder__highlight-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.6rem;margin-bottom:16px;letter-spacing:-.02em}
+.founder__highlight-text{font-size:1rem;line-height:1.7;color:rgba(245,239,227,.8);margin-bottom:24px}
+.founder__highlight-stat{display:flex;gap:32px;padding-top:24px;border-top:1px solid rgba(245,239,227,.1)}
+.founder__stat-item{text-align:center}
+.founder__stat-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.8rem;color:var(--naranja);line-height:1}
+.founder__stat-label{font-size:.75rem;color:rgba(245,239,227,.6);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+
+.final-cta{padding:90px 0;background:linear-gradient(135deg,var(--marron) 0%,#3A2018 100%);color:var(--crema);text-align:center;position:relative;overflow:hidden}
+.final-cta::before{content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;background:radial-gradient(circle,rgba(232,140,49,.08) 0%,transparent 60%);transform:translate(-50%,-50%);pointer-events:none}
+.final-cta__title{font-family:'Poppins',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.1;letter-spacing:-.03em;margin-bottom:20px;position:relative}
+.final-cta__desc{font-size:1.1rem;color:rgba(245,239,227,.7);margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7}
+.final-cta .form-group{max-width:500px;margin:0 auto}
+.final-cta .form-group__input{background:rgba(255,255,255,.95)}
+.final-cta .form-trust{justify-content:center;color:rgba(245,239,227,.5)}
+.final-cta__tagline{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.1rem;color:var(--naranja);margin-top:48px;letter-spacing:.02em}
+
+.footer{padding:32px 0;background:var(--black);text-align:center;font-size:.78rem;color:rgba(245,239,227,.35)}
+
+.form-success{display:none;text-align:center;padding:20px}
+.form-success.active{display:block;animation:fadeInUp .5s ease both}
+.form-success__icon{font-size:2.4rem;margin-bottom:12px}
+.form-success__title{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.2rem;margin-bottom:6px}
+.form-success__text{font-size:.92rem;opacity:.7}
+
+.reveal{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+@media(max-width:900px){
+.hero__grid{grid-template-columns:1fr;gap:40px;text-align:center}
+.hero__mascot{order:-1;max-width:260px;margin:0 auto}
+.hero__desc{max-width:100%}
+.form-group{max-width:100%;flex-direction:column}
+.founder__grid{grid-template-columns:1fr;gap:40px}
+.inside__grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+.hero{padding:120px 0 60px}
+.proof-bar__inner{gap:24px}
+.proof-bar__num{font-size:1.6rem}
+.inside__card{padding:24px}
+.founder__highlight{padding:32px}
+.final-cta{padding:60px 0}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar" id="topbar">
+  <div class="topbar__inner">
+    <div class="topbar__brand">Jirafa<span>Royalties</span></div>
+    <button class="topbar__cta" onclick="scrollToForm()">Quiero la guía</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero__grid">
+      <div>
+        <div class="hero__badge">+2.400 escritores ya la tienen</div>
+        <h1 class="hero__stat">El 92% de libros en KDP <em>no recuperan</em> la inversión.</h1>
+        <p class="hero__sub">Cambia tu estrategia. Cambia tu visión.<br>Esta guía es solo la punta del iceberg. Te la doy para que te lo tomes en serio.</p>
+        <p class="hero__desc">47 páginas con el sistema completo para validar, publicar y vender tu libro en Amazon KDP. Sin paja. Sin promesas vacías. Solo el método que genera regalías.</p>
+        <div class="hero__form" id="hero-form-container">
+          <form class="form-group" id="hero-form" onsubmit="handleSubmit(event,'hero')">
+            <input type="email" class="form-group__input" placeholder="Tu email" required aria-label="Email">
+            <button type="submit" class="form-group__btn">Descargar gratis</button>
+          </form>
+          <div class="form-trust">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Sin spam. Tu email está seguro. Cancela cuando quieras.</span>
+          </div>
+        </div>
+        <div class="form-success" id="hero-success">
+          <div class="form-success__icon">🦒</div>
+          <div class="form-success__title">La guía va a tu bandeja.</div>
+          <div class="form-success__text">Revisa tu email en 30 segundos.</div>
+        </div>
+      </div>
+      <div class="hero__mascot">
+        <img class="hero__mascot-img" src="/jirafa-logo.png" alt="Jirafa Royalties" onerror="this.parentElement.style.display='none'">
+        <div class="hero__mascot-tag">Datos + Sistema + Regalías</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="pain">
+  <div class="container--narrow">
+    <div class="pain__label reveal">El problema que nadie te cuenta</div>
+    <h2 class="pain__title reveal">Has publicado un libro.<br>O tienes uno en la cabeza.<br>Pero hay un problema.</h2>
+    <ul class="pain__list">
+      <li class="pain__item reveal"><div class="pain__icon">❌</div><span>No sabes si tu idea tiene mercado. Escribes por pasión, no por demanda. Y la pasión no paga facturas.</span></li>
+      <li class="pain__item reveal"><div class="pain__icon">❌</div><span>Amazon te da 7 slots de keywords gratis. Tú usas 3. Estás tirando dinero al río sin darte cuenta.</span></li>
+      <li class="pain__item reveal"><div class="pain__icon">❌</div><span>Tu portada parece hecha en Paint. Tu descripción aburre a una piedra. Y tu libro es invisible para el algoritmo.</span></li>
+      <li class="pain__item reveal"><div class="pain__icon">❌</div><span>No tienes ni idea de cómo funcionan los Ads. O peor: ya has gastado dinero y tu ACOS es un desastre.</span></li>
+      <li class="pain__item reveal"><div class="pain__icon">❌</div><span>Cada día que pasa sin sistema, alguien más publica en tu nicho. Con mejor portada. Con mejores keywords. Con Ads que funcionan.</span></li>
+    </ul>
+    <div class="pain__bottom reveal">El 92% fracasa. No porque sean malos escritores.<br>Porque nadie les enseñó a vender.</div>
+  </div>
+</section>
+
+<section class="inside">
+  <div class="container">
+    <div class="section-label reveal">Lo que hay dentro</div>
+    <h2 class="section-title reveal">Lo que NO encontrarás en ningún curso de 2.000€</h2>
+    <div class="inside__grid">
+      <div class="inside__card reveal">
+        <div class="inside__page">Página 7</div>
+        <div class="inside__card-title">El Método 3 Filtros</div>
+        <div class="inside__card-desc">Cómo saber en 15 minutos si tu idea de libro tiene mercado real. Sin adivinar. Con datos de mercado y números que no mienten.</div>
+      </div>
+      <div class="inside__card reveal reveal-delay-1">
+        <div class="inside__page">Página 18</div>
+        <div class="inside__card-title">Las 7 Keywords que el 78% desperdicia</div>
+        <div class="inside__card-desc">Amazon te da 7 slots gratis en el backend. La mayoría usa 3. La Pirámide Invertida para llenarlos todos con keywords que posicionan.</div>
+      </div>
+      <div class="inside__card reveal reveal-delay-2">
+        <div class="inside__page">Página 24</div>
+        <div class="inside__card-title">La Descripción que Convierte</div>
+        <div class="inside__card-desc">La plantilla exacta para escribir descripciones de Amazon que transforman visitantes en compradores. Rellena los huecos y publica.</div>
+      </div>
+      <div class="inside__card reveal reveal-delay-1">
+        <div class="inside__page">Página 31</div>
+        <div class="inside__card-title">Amazon Ads sin Quemar Dinero</div>
+        <div class="inside__card-desc">Cómo configurar tu primera campaña con 5€/día sin perder la camisa. Las Reglas de Oro que bajaron mi ACOS del 340% al 45%.</div>
+      </div>
+      <div class="inside__card reveal reveal-delay-2">
+        <div class="inside__page">Página 39</div>
+        <div class="inside__card-title">Calculadora de ROI</div>
+        <div class="inside__card-desc">Sabe exactamente cuánto puedes ganar antes de escribir una sola línea. Los números no mienten. Tu instinto sí.</div>
+      </div>
+      <div class="inside__card reveal reveal-delay-3">
+        <div class="inside__page">Página 42</div>
+        <div class="inside__card-title">Método GST — Escribe 3x Más Rápido</div>
+        <div class="inside__card-desc">El sistema de escritura rápida que uso para publicar un libro cada 2-3 semanas sin sacrificar calidad. Generate. Structure. Transform.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="final-cta" id="final-cta">
+  <div class="container--narrow">
+    <h2 class="final-cta__title reveal">Tu libro merece ser leído.<br>Pero primero tiene que ser <em style="color:var(--naranja);font-style:normal">encontrado.</em></h2>
+    <p class="final-cta__desc reveal">47 páginas. 0 paja. Tu bandeja en 30 segundos.</p>
+    <div class="reveal" id="final-form-container">
+      <form class="form-group" id="final-form" onsubmit="handleSubmit(event,'final')">
+        <input type="email" class="form-group__input" placeholder="Tu email" required aria-label="Email">
+        <button type="submit" class="form-group__btn">Quiero la guía</button>
+      </form>
+      <div class="form-trust">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Sin spam. Cancela cuando quieras.</span>
+      </div>
+    </div>
+    <div class="form-success" id="final-success">
+      <div class="form-success__icon">🦒</div>
+      <div class="form-success__title" style="color:var(--crema)">La guía va a tu bandeja.</div>
+      <div class="form-success__text" style="color:rgba(245,239,227,.6)">Revisa tu email. 30 segundos.</div>
+    </div>
+    <div class="final-cta__tagline reveal">Regalías hoy, libertad mañana. Muévete.</div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container">© Jirafa Royalties 2026. Todos los derechos reservados.</div></footer>
+
+<script>
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>topbar.classList.toggle('scrolled',window.scrollY>40));
+
+const revealEls=document.querySelectorAll('.reveal');
+const rObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');rObs.unobserve(e.target)}})},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+revealEls.forEach(el=>rObs.observe(el));
+
+const counters=document.querySelectorAll('[data-target]');
+let cAnim=false;
+const cObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting&&!cAnim){cAnim=true;animC()}})},{threshold:.5});
+if(counters.length)cObs.observe(counters[0].closest('.proof-bar'));
+function animC(){counters.forEach(c=>{const t=+c.dataset.target,s=c.dataset.suffix||'',d=1800,st=performance.now();function u(n){const p=Math.min((n-st)/d,1),e=1-Math.pow(1-p,3);c.textContent=Math.round(e*t)+(p>=1?s:'');if(p<1)requestAnimationFrame(u);else c.textContent=t+s}requestAnimationFrame(u)})}
+
+function handleSubmit(e,id){
+  e.preventDefault();
+  const f=document.getElementById(id+'-form'),ct=document.getElementById(id+'-form-container'),sc=document.getElementById(id+'-success');
+  const email=f.querySelector('input[type="email"]').value;
+  const b=f.querySelector('button');b.textContent='Enviando...';b.style.pointerEvents='none';
+  setTimeout(()=>{f.style.display='none';const t=ct.querySelector('.form-trust');if(t)t.style.display='none';sc.classList.add('active');console.log('Lead:',email)},800);
+}
+function scrollToForm(){document.getElementById('final-cta').scrollIntoView({behavior:'smooth'})}
+</script>
+</body>
+</html>
