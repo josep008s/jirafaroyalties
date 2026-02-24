@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piloto de Ads KDP — Jirafa Royalties</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#F97316;--amber:#F59E0B;--amberLight:#FCD34D;
+  --bg:#1C1917;--bgCard:#292524;--bgInput:#1C1917;
+  --border:#44403C;--borderLight:#57534E;
+  --text:#FAFAF9;--textMuted:#A8A29E;--textDim:#78716C;
+  --green:#22C55E;--greenBg:#052E16;--greenBorder:#166534;
+  --red:#EF4444;--redBg:#450A0A;--redBorder:#991B1B;
+  --yellow:#EAB308;--yellowBg:#422006;--yellowBorder:#854D0E;
+  --gold:#D97706;--blue:#3B82F6;--blueBg:#172554;--blueBorder:#1E40AF;
+  --cyan:#22D3EE;--cyanBg:#083344;--cyanBorder:#155E75;
+  --purple:#A78BFA;--purpleBg:#1E1B4B;--purpleBorder:#4338CA;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,system-ui,sans-serif;padding:20px 16px;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto}
+.card{background:var(--bgCard);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px}
+input[type=number],input[type=text]{background:var(--bgInput);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:15px;width:100%;outline:none;transition:border .2s;font-family:inherit}
+input:focus{border-color:var(--orange)}
+button{font-family:inherit;cursor:pointer}
+.btn-primary{background:var(--orange);color:#fff;border:none;border-radius:10px;padding:14px 24px;font-size:15px;font-weight:700;width:100%;transition:all .15s}
+.btn-primary:disabled{background:var(--border);opacity:.4;cursor:not-allowed}
+.lbl{color:var(--textMuted);font-size:11px;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.section-title{font-size:11px;font-weight:700;color:var(--textDim);text-transform:uppercase;letter-spacing:1px;margin:0 0 12px}
+.kpi-box{background:var(--bgInput);border-radius:8px;padding:12px 8px;text-align:center}
+.kpi-label{color:var(--textDim);font-size:9px;margin-bottom:3px;font-weight:700;text-transform:uppercase}
+.kpi-value{font-size:17px;font-weight:800}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.result-box{border-radius:10px;padding:14px 16px;margin-bottom:12px}
+hr.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+.mp-btn{border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);background:var(--bgInput);color:var(--text);font-weight:600}
+.mp-btn.active{background:rgba(249,115,22,.09);border-color:var(--orange);color:var(--orange)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const MPS = {
+  es:{label:"Amazon.es",flag:"🇪🇸",currency:"€",locale:"es-ES"},
+  com:{label:"Amazon.com",flag:"🇺🇸",currency:"$",locale:"en-US"}
+};
+
+let S = {
+  step:0, marketplace:"es",
+  precio:"", presupuestoDia:"",
+};
+
+function mp(){ return MPS[S.marketplace]; }
+function cur(){ return mp().currency; }
+function fmt(n,d=2) { return Number(n).toFixed(d); }
+function setVal(key,val){ S[key]=val; render(); }
+function go(step){ S.step=step; render(); }
+
+function render(){
+  const app=document.getElementById("app");
+  let h="";
+
+  h+=`<div style="text-align:center;margin-bottom:18px">
+    <div style="font-size:30px;margin-bottom:2px">🎯</div>
+    <h1 style="font-size:19px;font-weight:800;margin-bottom:2px">Piloto de Ads KDP</h1>
+    <p style="color:var(--textDim);font-size:11px">Jirafa Royalties — Cap. 5</p>
+  </div>`;
+
+  const steps=["Tu libro","Configurar"];
+  h+=`<div style="display:flex;gap:4px;margin-bottom:16px">
+    ${steps.map((s,i)=>`<div style="flex:1;text-align:center">
+      <div style="height:3px;border-radius:2px;background:${i<=S.step?'var(--orange)':'var(--border)'}"></div>
+      <div style="font-size:9px;margin-top:4px;color:${i===S.step?'var(--orange)':'var(--textDim)'};font-weight:${i===S.step?'700':'400'}">${s}</div>
+    </div>`).join("")}
+  </div>`;
+
+  if(S.step===0) {
+    const m=mp(),c=cur(),price=parseFloat(S.precio)||0;
+    h+=`<div class="card">
+      <div class="section-title">Marketplace</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:18px">
+        ${Object.entries(MPS).map(([k,v])=>`
+          <button class="mp-btn ${S.marketplace===k?'active':''}" onclick="S.marketplace='${k}';render()">
+            ${v.flag} ${v.label}
+          </button>`).join("")}
+      </div>
+      <div class="section-title">Precio de tu ebook</div>
+      <input type="number" id="inp-precio" value="${S.precio}" step="0.01" min="0.99" max="99.99"
+        placeholder="ej: 4.99" oninput="setVal('precio',this.value)" style="font-size:20px;text-align:center;font-weight:700;padding:14px">
+      <div id="live-royalty" style="margin-top:14px"></div>
+      <hr class="divider">
+      <div style="margin-bottom:14px"><label class="lbl">Presupuesto diario (${c})</label>
+        <input type="number" id="inp-budget" value="${S.presupuestoDia}" step="1" min="1" placeholder="ej: 10" oninput="setVal('presupuestoDia',this.value)">
+        <div style="font-size:10px;color:var(--textDim);margin-top:3px">Presupuesto para el lanzamiento</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <button class="btn-primary" id="nav-next" ${!price?'disabled':''} onclick="go(1)">Siguiente →</button>
+    </div>`;
+  }
+
+  if(S.step===1) {
+    const m=mp(),c=cur(),price=parseFloat(S.precio)||0;
+    const royRate = (price>=2.99 && price<=9.99) ? 0.70 : 0.35;
+    const royaltyUnit = +(price*royRate).toFixed(2);
+    const budget=parseFloat(S.presupuestoDia)||10;
+    
+    h+=`<div class="card">
+      <div class="section-title">📋 Tu configuración de lanzamiento</div>
+      <div class="result-box" style="background:var(--bgInput);border:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:12px;color:var(--textMuted)">Tu ebook</div><div style="font-size:18px;font-weight:800">${c}${fmt(price)}</div></div>
+          <div style="text-align:center"><div style="font-size:12px;color:var(--textMuted)">Regalía</div><div style="font-size:18px;font-weight:800;color:var(--green)">${c}${fmt(royaltyUnit)}</div></div>
+          <div style="text-align:right"><div style="font-size:12px;color:var(--textMuted)">Banda</div><div style="font-size:18px;font-weight:800;color:${royRate===0.70?'var(--green)':'var(--amber)'}">${royRate===0.70?'70%':'35%'}</div></div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="result-box" style="background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.25)">
+        <div style="display:flex;justify-content:space-around">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--textDim);font-weight:700">ACOS OBJETIVO</div><div style="font-size:22px;font-weight:800;color:var(--orange)">${fmt(royRate*100*.75,1)}%</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--textDim);font-weight:700">PPTO/DÍA</div><div style="font-size:22px;font-weight:800;color:var(--text)">${c}${fmt(budget,0)}</div></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--textMuted);line-height:1.6">
+        <p style="margin:0 0 8px"><strong style="color:var(--text)">6 campañas recomendadas:</strong></p>
+        <ul style="margin:0;padding-left:20px">
+          <li>Manual Amplia - 40% presupuesto</li>
+          <li>Manual Exacta - 30% presupuesto</li>
+          <li>Producto Competencia - 15% presupuesto</li>
+          <li>Automática - 15% presupuesto (día 15+)</li>
+          <li>Categoría - 15% presupuesto</li>
+          <li>Producto Propio - flexible</li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-primary" style="flex:1;background:var(--bgInput);color:var(--textMuted);border:1px solid var(--border)" onclick="go(0)">← Atrás</button>
+      <button class="btn-primary" style="flex:1" onclick="alert('Configuración lista. Ve a Amazon Ads y crea tus 6 campañas.\n\n📊 Referencia:\n- Puja base según tu ACOS objetivo\n- Distribuye presupuesto según tamaño de campaña\n- Día 0: Manual Amplia, Exacta, Producto\n- Día 15+: Activa Automática')">✓ Listo</button>
+    </div>`;
+  }
+
+  h+=`<div style="text-align:center;padding:14px">\n    <div style="font-size:10px;color:var(--textDim)">Jirafa Royalties · Cap. 5 — Amazon Ads</div>
+  </div>`;
+  app.innerHTML=h;
+  updateLiveDisplay();
+}
+
+function updateLiveDisplay(){
+  const royBox=document.getElementById("live-royalty");
+  if(royBox){
+    const price=parseFloat(S.precio)||0;
+    if(price>0){
+      const m=mp(),c=cur();
+      const royRate=(price>=2.99 && price<=9.99)?0.70:0.35;
+      const rUnit=+(price*royRate).toFixed(2);
+      const be=+(royRate*100).toFixed(1);
+      const inB=price>=2.99 && price<=9.99;
+      royBox.innerHTML=`<div class="grid-3">
+        <div class="kpi-box"><div class="kpi-label">Regalía</div><div class="kpi-value" style="color:var(--green)">${c}${fmt(rUnit)}</div><div style="font-size:10px;color:var(--textDim)">${fmt(royRate*100,0)}%</div></div>
+        <div class="kpi-box"><div class="kpi-label">ACOS Break-even</div><div class="kpi-value" style="color:var(--orange)">${be}%</div></div>
+        <div class="kpi-box"><div class="kpi-label">Banda</div><div class="kpi-value" style="font-size:15px;color:${inB?'var(--green)':'var(--amber)'}">${inB?'70%':'35%'}</div></div>
+      </div>${!inB?`<div style="background:var(--bgInput);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12px;color:var(--textMuted)"><span style="font-weight:700">💡 Tip:</span> Ajusta entre <strong style="color:var(--text)">${c}2.99–${c}9.99</strong> para obtener <strong style="color:var(--text)">70% de regalía</strong>.</div>`:''}`;
+    } else royBox.innerHTML='';
+  }
+}
+
+render();
+</script>
+</body>
+</html>

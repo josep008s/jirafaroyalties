@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validador de Nichos — Jirafa Royalties</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#F97316;--amber:#F59E0B;--amberLight:#FCD34D;
+  --bg:#1C1917;--bgCard:#292524;--bgInput:#1C1917;
+  --border:#44403C;--borderLight:#57534E;
+  --text:#FAFAF9;--textMuted:#A8A29E;--textDim:#78716C;
+  --green:#22C55E;--greenBg:#052E16;--greenBorder:#166534;
+  --red:#EF4444;--redBg:#450A0A;--redBorder:#991B1B;
+  --yellow:#EAB308;--yellowBg:#422006;--yellowBorder:#854D0E;
+  --gold:#D97706;--blue:#3B82F6;--blueBg:#172554;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,system-ui,sans-serif;padding:20px 16px;min-height:100vh}
+.wrap{max-width:520px;margin:0 auto}
+.card{background:var(--bgCard);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px}
+.card-sm{padding:18px}
+input[type=number],input[type=text]{background:var(--bgInput);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:15px;width:100%;outline:none;transition:border .2s;font-family:inherit}
+input:focus{border-color:var(--orange)}
+button{font-family:inherit;cursor:pointer}
+.btn-primary{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;transition:opacity .15s}
+.btn-primary:disabled{background:var(--border);opacity:.5;cursor:not-allowed}
+.btn-ghost{background:var(--bgInput);color:var(--textMuted);border:1px solid var(--border);border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700}
+.lbl{color:var(--textMuted);font-size:12px;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:4px}
+.section-title{font-size:11px;font-weight:700;color:var(--textDim);text-transform:uppercase;letter-spacing:1px;margin:0 0 12px}
+.tag{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);border-radius:6px;padding:3px 10px;font-size:11px;color:var(--orange);font-weight:600;display:inline-block}
+.radio-btn{background:var(--bgInput);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;text-align:left;cursor:pointer;transition:all .15s;font-weight:400;width:100%;display:block}
+.radio-btn.active{background:rgba(249,115,22,.09);border-color:var(--orange);color:var(--orange);font-weight:600}
+.minibar-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;flex:1}
+.minibar-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.proj-grid{display:grid;grid-template-columns:65px 1fr 1fr 1fr;gap:4px;align-items:center}
+.proj-row{padding:8px 0;border-bottom:1px solid var(--border)}
+.proj-row:last-child{border-bottom:none}
+.result-box{border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.timeline-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1}
+.mp-btn{border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);background:var(--bgInput);color:var(--text)}
+.mp-btn.active{background:rgba(249,115,22,.09);border-color:var(--orange);color:var(--orange);font-weight:700}
+.cb-box{width:20px;height:20px;border-radius:4px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.cb-box.checked{border-color:var(--orange);background:var(--orange)}
+.hist-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;flex:1}
+.kpi-box{background:var(--bgInput);border-radius:8px;padding:10px 8px;text-align:center}
+.kpi-label{color:var(--textDim);font-size:9px;margin-bottom:3px;font-weight:600;letter-spacing:.5px}
+.kpi-value{font-size:16px;font-weight:800}
+@media(max-width:400px){.grid-3{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+// ─── MARKETPLACES (solo .es y .com) ─────────────────────────
+const MARKETPLACES = {
+  es: { label:"Amazon.es", flag:"\uD83C\uDDEA\uD83C\uDDF8", currency:"€", locale:"es-ES",
+    royaltyBands:{high:{min:2.99,max:9.99,rate:.70},low:{rate:.35}},
+    pbPrinting:{fixed:0.60,perPage:0.012,royaltyRate:0.60,defaultPages:150},
+    bsrCurve:{A:4500,B:.75},
+    revenueThresholds:[
+      {min:15000,score:95,label:"Mercado fuerte"},{min:10000,score:80,label:"Mercado grande"},
+      {min:7000,score:65,label:"Mercado sano"},{min:5000,score:50,label:"Mercado viable"},
+      {min:3000,score:35,label:"Mercado peque\u00F1o"},{min:2000,score:20,label:"Mercado limitado"},
+      {min:0,score:5,label:"Mercado muerto"}],
+    bsrThresholds:[
+      {max:10000,score:90,label:"Demanda alta"},{max:30000,score:75,label:"Demanda buena"},
+      {max:50000,score:55,label:"Demanda aceptable"},{max:80000,score:35,label:"Demanda baja"},
+      {max:100000,score:18,label:"Demanda muy baja"},{max:Infinity,score:5,label:"Sin demanda"}],
+    defaultVentasDia:{top5:8,top10:4,top20:2},
+    note:"Mercado medio. Buena base para libros en espa\u00F1ol."
+  },
+  com: { label:"Amazon.com", flag:"\uD83C\uDDFA\uD83C\uDDF8", currency:"$", locale:"en-US",
+    royaltyBands:{high:{min:2.99,max:9.99,rate:.70},low:{rate:.35}},
+    pbPrinting:{fixed:0.85,perPage:0.012,royaltyRate:0.60,defaultPages:150},
+    bsrCurve:{A:18000,B:.78},
+    revenueThresholds:[
+      {min:40000,score:95,label:"Mercado fuerte"},{min:25000,score:80,label:"Mercado grande"},
+      {min:15000,score:65,label:"Mercado sano"},{min:10000,score:50,label:"Mercado viable"},
+      {min:6000,score:35,label:"Mercado peque\u00F1o"},{min:3000,score:20,label:"Mercado limitado"},
+      {min:0,score:5,label:"Mercado muerto"}],
+    bsrThresholds:[
+      {max:20000,score:90,label:"Demanda alta"},{max:60000,score:75,label:"Demanda buena"},
+      {max:100000,score:55,label:"Demanda aceptable"},{max:150000,score:35,label:"Demanda baja"},
+      {max:250000,score:18,label:"Demanda muy baja"},{max:Infinity,score:5,label:"Sin demanda"}],
+    defaultVentasDia:{top5:15,top10:7,top20:3},
+    note:"Mercado m\u00E1s grande del mundo. Umbrales y competencia m\u00E1s altos."
+  },
+};
+
+// ─── STATE ──────────────────────────────────────────────────
+const S = {
+  step:0, marketplace:"es", keyword:"", metodo:"helium",
+  revenue:"", bsr:"",
+  pocasResenas:"", calidadPortadas:"", calidadDescripciones:"",
+  precio:"", costePortada:"", costeFormateo:"", costeAds:"", adsMensuales:"",
+  incluyePaperback:false, precioPB:"", numPaginas:"",
+  history:[], copied:false,
+};
+
+function setVal(key, val) {
+  S[key] = val;
+  updateLiveScores();
+}
+
+function go(patch) {
+  Object.assign(S, patch);
+  render();
+}
+
+function togglePaperback() {
+  S.incluyePaperback = !S.incluyePaperback;
+  const box = document.getElementById("pb-box");
+  if (box) {
+    if (S.incluyePaperback) { box.classList.add("checked"); box.innerHTML = '<span style="color:#fff;font-size:12px;font-weight:800">\u2713</span>'; }
+    else { box.classList.remove("checked"); box.innerHTML = ""; }
+  }
+  const fields = document.getElementById("pb-fields");
+  if (fields) fields.style.display = S.incluyePaperback ? "block" : "none";
+  updateLiveScores();
+}
+
+function estimateSalesFromBSR(bsr, mk) {
+  const m = MARKETPLACES[mk], {A, B: e} = m.bsrCurve;
+  return Math.max(.1, +(A * Math.pow(Math.max(bsr,1), -e)).toFixed(1));
+}
+
+function getDynVentas() {
+  const mk = S.marketplace, mp = MARKETPLACES[mk], p = parseFloat(S.precio) || 4.99;
+  let base;
+  if (S.metodo === "helium" && parseFloat(S.revenue) > 0)
+    base = parseFloat(S.revenue) / 10 / 30 / Math.max(p, 1);
+  else if (S.metodo === "bsr" && parseFloat(S.bsr) > 0)
+    base = estimateSalesFromBSR(parseFloat(S.bsr), mk);
+  else return mp.defaultVentasDia;
+  base = Math.max(.1, +base.toFixed(1));
+  return {top5: Math.max(1, +(base*1.8).toFixed(1)), top10: Math.max(.5, +base.toFixed(1)), top20: Math.max(.2, +(base*.5).toFixed(1))};
+}
+
+function scoreFiltro1() {
+  const mk = S.marketplace, mp = MARKETPLACES[mk];
+  if (S.metodo === "helium") {
+    const r = parseFloat(S.revenue); if (!r && r !== 0) return null;
+    for (const t of mp.revenueThresholds) if (r >= t.min) {
+      const d = t.score >= 50
+        ? `Revenue ${mp.currency}${r.toLocaleString(mp.locale)} en ${mp.label}. ${t.score >= 70 ? "Demanda clara." : "Confirma competencia."}`
+        : `Revenue ${mp.currency}${r.toLocaleString(mp.locale)} en ${mp.label}. ${t.score >= 30 ? "Solo viable con competencia muy baja." : "Siguiente idea."}`;
+      return {score: t.score, label: t.label, detail: d};
+    }
+  } else {
+    const b = parseFloat(S.bsr); if (!b && b !== 0) return null;
+    for (const t of mp.bsrThresholds) if (b <= t.max) {
+      const est = estimateSalesFromBSR(b, mk);
+      return {score: t.score, label: t.label, detail: `BSR ${b.toLocaleString("es")} en ${mp.label} \u2248 ${est} ventas/d\u00EDa \u2014 ${t.score >= 50 ? "mercado activo." : t.score >= 30 ? "mercado marginal." : "sin demanda real."}`};
+    }
+  }
+  return {score: 5, label: "Sin demanda", detail: "Mercado inexistente."};
+}
+
+function scoreFiltro2() {
+  const pr = parseInt(S.pocasResenas), cp = parseInt(S.calidadPortadas), cd = parseInt(S.calidadDescripciones);
+  if (isNaN(pr) || isNaN(cp) || isNaN(cd)) return null;
+  const srR = Math.min(pr/10,1)*100, srP = Math.max(0,(5-cp)/4)*100, srD = Math.max(0,(5-cd)/4)*100;
+  const score = Math.round(srR*.4 + srP*.3 + srD*.3);
+  let label, detail;
+  if (score >= 70) {label="Competencia d\u00E9bil"; detail="Puedes entrar con un listing bien optimizado. Hay huecos claros.";}\nelse if (score >= 50) {label="Competencia media"; detail="Necesitar\u00E1s portada profesional y descripci\u00F3n optimizada para destacar.";}\nelse if (score >= 30) {label="Competencia alta"; detail="Los top 10 est\u00E1n bien posicionados. Entrada costosa y lenta.";}\nelse {label="Competencia feroz"; detail="Dominado por libros consolidados. Busca un subnicho m\u00E1s espec\u00EDfico.";}\nreturn {score, label, detail, breakdown: {resenas: Math.round(srR), portadas: Math.round(srP), descripciones: Math.round(srD)}};\n}\n\nconst PB_SALES_RATIO = 0.35;\n\nfunction calcPBPrinting(mp, pages) {\n  const pb = mp.pbPrinting;\n  return +(pb.fixed + pb.perPage * Math.max(pages, 24)).toFixed(2);\n}\n\nfunction calcPBMinPrice(mp, pages) {\n  const printCost = calcPBPrinting(mp, pages);\n  const raw = printCost / mp.pbPrinting.royaltyRate;\n  return +(Math.ceil(raw) - 0.01).toFixed(2);\n}\n\nfunction calcPBSuggestedPrice(mp, pages) {\n  const printCost = calcPBPrinting(mp, pages);\n  const raw = printCost * 2.5;\n  return +(Math.ceil(raw) - 0.01).toFixed(2);\n}\n\nfunction calcPBRoyalty(mp, pricePB, pages) {\n  const printCost = calcPBPrinting(mp, pages);\n  return Math.max(0, +(pricePB * mp.pbPrinting.royaltyRate - printCost).toFixed(2));\n}\n\nfunction scoreFiltro3() {\n  const mk = S.marketplace, mp = MARKETPLACES[mk], p = parseFloat(S.precio);\n  if (!p) return null;\n  const cP = parseFloat(S.costePortada)||0, cF = parseFloat(S.costeFormateo)||0, cAI = parseFloat(S.costeAds)||0;\n  const adsR = parseFloat(S.adsMensuales)||0;\n  const bands = mp.royaltyBands, rate = (p >= bands.high.min && p <= bands.high.max) ? bands.high.rate : bands.low.rate;\n  const royaltyUnit = +(p * rate).toFixed(2), inv = cP + cF + cAI;\n\n  const usePB = S.incluyePaperback;\n  const pbPages = usePB ? (parseInt(S.numPaginas) || mp.pbPrinting.defaultPages) : 0;\n  const pbPrice = usePB ? (parseFloat(S.precioPB) || calcPBSuggestedPrice(mp, pbPages)) : 0;\n  const pbPrintCost = usePB ? calcPBPrinting(mp, pbPages) : 0;\n  const pbRoyaltyUnit = usePB ? calcPBRoyalty(mp, pbPrice, pbPages) : 0;\n\n  const vd = getDynVentas();\n  const projs = {top5:{ventasDia:vd.top5,label:"Top 5"}, top10:{ventasDia:vd.top10,label:"Top 10"}, top20:{ventasDia:vd.top20,label:"Top 20"}};\n  for (const k of Object.keys(projs)) {\n    const pr = projs[k];\n    pr.ebookBruto = +(pr.ventasDia * 30 * royaltyUnit).toFixed(0);\n    pr.pbVentasDia = usePB ? +(pr.ventasDia * PB_SALES_RATIO).toFixed(1) : 0;\n    pr.pbBruto = usePB ? Math.round(pr.pbVentasDia * 30 * pbRoyaltyUnit) : 0;\n    pr.ingresoBruto = pr.ebookBruto + pr.pbBruto;\n    pr.ingresoNeto = Math.max(0, pr.ingresoBruto - adsR);\n    pr.margenPct = pr.ingresoBruto > 0 ? Math.round(pr.ingresoNeto / pr.ingresoBruto * 100) : 0;\n    pr.mesesBreakEven = pr.ingresoNeto > 0 && inv > 0 ? Math.ceil(inv / pr.ingresoNeto) : inv <= 0 ? 0 : -1;\n    pr.acos = pr.ingresoBruto > 0 ? Math.round(adsR / pr.ingresoBruto * 100) : 999;\n  }\n  const beCop = royaltyUnit > 0 ? Math.ceil(inv / royaltyUnit) : 9999;\n  const net10 = projs.top10.ingresoNeto, mBE = projs.top10.mesesBreakEven;\n  const annualNet = net10 * 12;\n  const roi = inv > 0 ? Math.round(((annualNet - inv) / inv) * 100) : annualNet > 0 ? 9999 : 0;\n  let score, label, detail;\n  if (mBE === -1) {score=5; label="No rentable"; detail=`Los ads (${mp.currency}${adsR}/mes) superan ingresos.`;}\n  else if (mBE <= 1 && net10 > 0) {score=95; label="Muy rentable"; detail=`Break-even en 1 mes. Neto ${mp.currency}${net10}/mes. ROI: ${roi}%.`;}\n  else if (mBE <= 3) {score=80; label="Rentable"; detail=`Break-even en ${mBE} meses. Neto ${mp.currency}${net10}/mes. ROI: ${roi}%.`;}\n  else if (mBE <= 6) {score=60; label="Viable"; detail=`Break-even ${mBE} meses. Margen ${projs.top10.margenPct}%. ROI: ${roi}%.`;}\n  else if (mBE <= 12) {score=40; label="Ajustado"; detail=`Break-even ${mBE} meses. Considera reducir ads o subir precio.`;}\n  else if (mBE <= 24) {score=20; label="Dif\u00EDcil"; detail=`Break-even ${mBE} meses. Inversi\u00F3n alta vs retorno lento.`;}\n  else {score=5; label="No rentable"; detail="+24 meses. Replantea costes.";}\n  return {score, label, detail, royaltyRate:rate, royaltyUnit, inversionInicial:inv, breakEvenCopias:beCop, projections:projs, adsRecurrentes:adsR, currency:mp.currency, roi, annualNet, ventasDia:vd, isDynamic:true,\n    pb:{active:usePB, price:pbPrice, pages:pbPages, printCost:pbPrintCost, royaltyUnit:pbRoyaltyUnit, salesRatio:PB_SALES_RATIO}};\n}\n\nfunction compositeScore(a, b, c) {return (!a||!b||!c) ? null : Math.round(a.score*.4 + b.score*.35 + c.score*.25)}\n\nfunction getVerdict(c) {\n  if (c >= 75) return {emoji:"\uD83D\uDFE2", label:"ADELANTE", color:"var(--green)", msg:"Tu nicho pasa los 3 filtros. Tienes datos s\u00F3lidos para empezar."};\n  if (c >= 55) return {emoji:"\uD83D\uDFE1", label:"VIABLE CON AJUSTES", color:"var(--yellow)", msg:"Hay potencial pero necesitas reforzar el filtro m\u00E1s d\u00E9bil."};\n  if (c >= 35) return {emoji:"\uD83D\uDFE0", label:"RIESGO ALTO", color:"var(--orange)", msg:"Dos o m\u00E1s filtros est\u00E1n d\u00E9biles. Considera un subnicho diferente."};\n  return {emoji:"\uD83D\uDD34", label:"SIGUIENTE IDEA", color:"var(--red)", msg:"Este nicho no tiene las condiciones. Mejor 15 min buscando otro que 4 meses perdidos."};\n}\n\nfunction esc(s) {const d = document.createElement("div"); d.textContent = s; return d.innerHTML;}\nfunction scoreColor(s) {return s >= 70 ? "var(--green)" : s >= 50 ? "var(--yellow)" : s >= 30 ? "var(--orange)" : "var(--red)";}\nfunction scoreBg(s) {return s >= 70 ? "var(--greenBg)" : s >= 50 ? "var(--yellowBg)" : s >= 30 ? "rgba(249,115,22,.08)" : "var(--redBg)";}\nfunction scoreBorder(s) {return s >= 70 ? "var(--greenBorder)" : s >= 50 ? "var(--yellowBorder)" : s >= 30 ? "rgba(249,115,22,.38)" : "var(--redBorder)";}\n\nfunction resultBoxHTML(r) {\n  if (!r) return "";\n  return `<div class="result-box" style="background:${scoreBg(r.score)};border:1px solid ${scoreBorder(r.score)}">\n    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">\n      <span style="font-weight:700;font-size:13px;color:${scoreColor(r.score)}">${esc(r.label)}</span>\n      <span style="font-weight:800;font-size:15px;color:${scoreColor(r.score)}">${r.score}/100</span>\n    </div>\n    <p style="color:var(--textMuted);font-size:12px;margin:0;line-height:1.5">${esc(r.detail)}</p>\n  </div>`;\n}\n\nfunction updateLiveScores() {\n  const box = document.getElementById("live-score");\n  let result = null;\n  if (S.step === 1) result = scoreFiltro1();\n  else if (S.step === 2) result = scoreFiltro2();\n  else if (S.step === 3) result = scoreFiltro3();\n  if (box) box.innerHTML = result ? resultBoxHTML(result) : "";\n\n  const navBtn = document.getElementById("nav-next");\n  if (navBtn) {\n    let canProceed = false;\n    if (S.step === 0) canProceed = S.keyword.trim().length > 0;\n    else if (S.step === 1) canProceed = !!scoreFiltro1();\n    else if (S.step === 2) canProceed = !!scoreFiltro2();\n    else if (S.step === 3) canProceed = !!scoreFiltro3();\n    navBtn.disabled = !canProceed;\n  }\n}\n\nfunction render() {\n  const mk = S.marketplace, mp = MARKETPLACES[mk], cur = mp.currency;\n  const app = document.getElementById("app");\n  let h = "";\n\n  h += `<div style="text-align:center;margin-bottom:28px">\n    <div style="font-size:36px;margin-bottom:2px">\uD83E\uDD92</div>\n    <h1 style="font-size:22px;font-weight:800;margin:0 0 2px;letter-spacing:-.5px">VALIDADOR DE NICHOS</h1>\n    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.18);border-radius:20px;padding:4px 14px">\n      <span style="color:var(--orange);font-size:12px;font-weight:700">M\u00E9todo 3 Filtros</span>\n      <span style="color:var(--textDim);font-size:12px">\u00B7</span>\n      <span style="color:var(--textDim);font-size:12px">Jirafa Royalties</span>\n    </div>\n  </div>`;\n\n  if (S.step > 0 && S.step < 4) {\n    const labels = ["Demanda","Competencia","Rentabilidad"];\n    h += `<div style="display:flex;gap:4px;margin-bottom:20px">`;\n    labels.forEach((l, i) => {\n      h += `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">\n        <div style="width:100%;height:3px;border-radius:2px;background:${i < S.step-1 ? "var(--orange)" : i === S.step-1 ? "rgba(249,115,22,.38)" : "var(--border)"}"></div>\n        <span style="font-size:10px;color:${i <= S.step-1 ? "var(--orange)" : "var(--textDim)"};font-weight:${i === S.step-1 ? 700 : 400}">${l}</span>\n      </div>`;\n    });\n    h += `</div>`;\n  }\n\n  if (S.step === 0) {\n    h += `<div class="card">\n      <p style="color:var(--textMuted);font-size:14px;line-height:1.65;margin:0 0 6px">\n        Tu idea tiene que pasar <strong style="color:var(--text)">3 filtros</strong> antes de escribir.\n      </p>\n      <div style="margin-bottom:14px"><label class="lbl">Marketplace</label><div style="display:flex;flex-wrap:wrap;gap:6px">`;\n    for (const [key, m] of Object.entries(MARKETPLACES)) {\n      h += `<button class="mp-btn${mk === key ? " active" : ""}" onclick="go({marketplace:'${key}'})">${m.flag} .${key}</button>`;\n    }\n    h += `</div></div>";\n    h += `<div style="margin-bottom:14px"><label class="lbl">Tu keyword principal</label>\n      <input type="text" id="inp-kw" value="${esc(S.keyword)}" placeholder="ej: batch cooking recetas" oninput="setVal('keyword',this.value)"></div>`;\n    h += `<button id="nav-next" class="btn-primary" style="width:100%" ${S.keyword.trim() ? "" : "disabled"} onclick="go({step:1})">Empezar validaci\u00F3n \u2192</button>`;\n    h += `</div>`;\n  }\n\n  if (S.step === 1) {\n    h += `<div class="card">\n      <h2 style="font-size:16px;font-weight:800;margin:0 0 2px">Filtro 1 \u2014 Demanda</h2>\n      <div style="margin-bottom:14px"><label class="lbl">M\u00E9todo de medici\u00F3n</label><div style="display:flex;flex-direction:column;gap:6px">\n      <button class="radio-btn${S.metodo === "helium" ? " active" : ""}" onclick="go({metodo:'helium',revenue:'',bsr:''})">\uD83D\uDCCA Helium 10</button>\n      <button class="radio-btn${S.metodo === "bsr" ? " active" : ""}" onclick="go({metodo:'bsr',revenue:'',bsr:''})">\uD83D\uDCC8 BSR</button>\n    </div></div>`;\n    if (S.metodo === "helium") {\n      h += `<div style="margin-bottom:14px"><label class="lbl">Revenue</label>\n        <input type="number" id="inp-f1" value="${S.revenue}" placeholder="ej: 8500" min="0" oninput="setVal('revenue',this.value)"></div>`;\n    } else {\n      h += `<div style="margin-bottom:14px"><label class="lbl">BSR</label>\n        <input type="number" id="inp-f1" value="${S.bsr}" placeholder="ej: 35000" min="0" oninput="setVal('bsr',this.value)"></div>`;\n    }\n    h += `<div id="live-score"></div>`;\n    h += `<div style="display:flex;gap:8px">\n      <button class="btn-ghost" onclick="go({step:0})">\u2190 Atr\u00E1s</button>\n      <button id="nav-next" class="btn-primary" style="flex:1" ${scoreFiltro1() ? "" : "disabled"} onclick="go({step:2})">Filtro 2 \u2192</button>\n    </div></div>`;\n  }\n\n  if (S.step === 2) {\n    h += `<div class="card">\n      <h2 style="font-size:16px;font-weight:800;margin:0 0 2px">Filtro 2 \u2014 Competencia</h2>\n      <div style="margin-bottom:14px"><label class="lbl">Libros con <100 rese\u00F1as</label>\n      <input type="number" id="inp-f2r" value="${S.pocasResenas}" placeholder="ej: 6" min="0" max="10" oninput="setVal('pocasResenas',this.value)"></div>`;\n    h += `<div id="live-score"></div>`;\n    h += `<div style="display:flex;gap:8px">\n      <button class="btn-ghost" onclick="go({step:1})">\u2190 Atr\u00E1s</button>\n      <button id="nav-next" class="btn-primary" style="flex:1" ${scoreFiltro2() ? "" : "disabled"} onclick="go({step:3})">Filtro 3 \u2192</button>\n    </div></div>`;\n  }\n\n  if (S.step === 3) {\n    h += `<div class="card">\n      <h2 style="font-size:16px;font-weight:800;margin:0 0 2px">Filtro 3 \u2014 Rentabilidad</h2>\n      <div style="margin-bottom:14px"><label class="lbl">Precio ebook</label>\n      <input type="number" id="inp-f3p" value="${S.precio}" placeholder="ej: 4.99" min="0.99" step="0.01" oninput="setVal('precio',this.value)"></div>`;\n    h += `<div id="live-score"></div>`;\n    h += `<div style="display:flex;gap:8px">\n      <button class="btn-ghost" onclick="go({step:2})">\u2190 Atr\u00E1s</button>\n      <button id="nav-next" class="btn-primary" style="flex:1" ${scoreFiltro3() ? "" : "disabled"} onclick="go({step:4})">Ver resultado \u2192</button>\n    </div></div>`;\n  }\n\n  app.innerHTML = h;\n  setTimeout(updateLiveScores, 10);\n}\n\nrender();\n</script>\n</body>\n</html>
