@@ -11,3 +11,76 @@
 <meta property="og:url" content="https://www.jirafaroyalties.com/validador">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#F97316;--amber:#F59E0B;--amberLight:#FCD34D;
+  --bg:#1C1917;--bgCard:#292524;--bgInput:#1C1917;
+  --border:#44403C;--borderLight:#57534E;
+  --text:#FAFAF9;--textMuted:#A8A29E;--textDim:#78716C;
+  --green:#22C55E;--greenBg:#052E16;--greenBorder:#166534;
+  --red:#EF4444;--redBg:#450A0A;--redBorder:#991B1B;
+  --yellow:#EAB308;--yellowBg:#422006;--yellowBorder:#854D0E;
+  --gold:#D97706;--blue:#3B82F6;--blueBg:#172554;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,system-ui,sans-serif;padding:20px 16px;min-height:100vh}
+.wrap{max-width:520px;margin:0 auto}
+.card{background:var(--bgCard);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px}
+.card-sm{padding:18px}
+input[type=number],input[type=text]{background:var(--bgInput);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:15px;width:100%;outline:none;transition:border .2s;font-family:inherit}
+input:focus{border-color:var(--orange)}
+button{font-family:inherit;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--orange) 0%,var(--amber) 100%);border:none;border-radius:8px;padding:12px 20px;color:#1C1917;font-weight:600;font-size:15px;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 12px rgba(249,115,22,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(249,115,22,0.4)}
+.btn-primary:active{transform:translateY(0)}
+h1{font-size:24px;font-weight:700;margin-bottom:4px}
+h2{font-size:16px;font-weight:700;margin-bottom:12px;margin-top:18px}
+.text-sm{font-size:13px;color:var(--textMuted)}
+.text-xs{font-size:11px;color:var(--textDim)}
+.badge{display:inline-block;background:var(--greenBg);color:var(--green);border:1px solid var(--greenBorder);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;margin-bottom:12px}
+.error-badge{background:var(--redBg);color:var(--red);border-color:var(--redBorder)}
+.warning-badge{background:var(--yellowBg);color:var(--yellow);border-color:var(--yellowBorder)}
+.result-card{border-left:4px solid var(--green);padding:14px;border-radius:0}
+.result-card.fail{border-left-color:var(--red)}
+.result-card.warn{border-left-color:var(--yellow)}
+.highlight{color:var(--orange);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+<h1>Validador de Nichos</h1>
+<p class="text-sm">Evalúa la rentabilidad de tu nicho KDP en 3 pasos</p>
+</header>
+<main>
+<div class="card">
+<span class="badge">Paso 1</span>
+<h2>Estima la Demanda Mensual</h2>
+<p class="text-sm">¿Cuántos libros estimas que se venden al mes en este nicho en Amazon?</p>
+<input type="number" id="demand" placeholder="Ej: 1000" min="0" value="">
+</div>
+<div class="card">
+<span class="badge">Paso 2</span>
+<h2>Evalúa la Competencia</h2>
+<p class="text-sm">Revisa en Amazon: ¿cuántos libros hay en la búsqueda exacta?</p>
+<input type="number" id="competition" placeholder="Ej: 500" min="0" value="">
+</div>
+<div class="card">
+<span class="badge">Paso 3</span>
+<h2>Rentabilidad Promedio Estimada</h2>
+<p class="text-sm">¿Cuánto ganas en promedio por venta (royalties + ads)?</p>
+<input type="number" id="revenue" placeholder="Ej: 1.5" step="0.01" min="0" value="">
+</div>
+<button class="btn-primary" onclick="validateNiche()">Validar Nicho</button>
+<div id="results" style="margin-top:20px;display:none"></div>
+</main>
+<footer style="margin-top:40px;padding-top:16px;border-top:1px solid var(--border);text-align:center">
+<p style="font-size:12px;color:#78716C;margin-bottom:8px">Herramienta de <strong style="color:#F97316">El Sistema Jirafa</strong></p>
+<a href="/piloto" style="color:#A8A29E;font-size:12px;text-decoration:none;border:1px solid #44403C;border-radius:6px;padding:6px 14px;display:inline-block;transition:all .15s" onmouseover="this.style.borderColor='#F97316';this.style.color='#F97316'" onmouseout="this.style.borderColor='#44403C';this.style.color='#A8A29E'">Piloto de Ads KDP &rarr;</a>
+</footer>
+</div>
+<script>
+function validateNiche(){const e=parseInt(document.getElementById("demand").value),n=parseInt(document.getElementById("competition").value),t=parseFloat(document.getElementById("revenue").value),d=document.getElementById("results");if(e&&n&&t){const r=e/n,o=e*t;let s="";const i={demand:e,competition:n,ratio:r,revenue:t,monthlyIncome:o};r<.5?s+='<div class="result-card fail"><strong>🔴 Nicho Saturado</strong><p class="text-sm">La demanda es muy baja comparada con la competencia. '+e.toLocaleString("es-ES")+" ventas / "+n+" competidores = "+r.toFixed(2)+" ventas/competidor.</p></div>':r>=.5&&r<1?s+='<div class="result-card warn"><strong>⚠️ Nicho Poco Viable</strong><p class="text-sm">'+r.toFixed(2)+" ventas/competidor. Necesitas incrementar demanda o reducir competencia.</p></div>":r>=1&&r<2?s+='<div class="result-card warn"><strong>⚠️ Nicho Moderado</strong><p class="text-sm">'+r.toFixed(2)+" ventas/competidor es viable pero requiere ejecución impecable.</p></div>":s+='<div class="result-card"><strong>✅ Nicho Promisorio</strong><p class="text-sm">'+r.toFixed(2)+" ventas/competidor es excelente. Con buena ejecución tienes potencial.</p></div>",s+='<div class="result-card" style="border-left-color:var(--orange);margin-top:12px"><strong style="color:var(--orange)">📊 Ingresos Potenciales</strong><p class="text-sm">Mensual: $'+o.toFixed(2)+"</p><p class='text-sm'>Anual: $"+(12*o).toFixed(2)+"</p></div>",s+='<div style="margin-top:16px;padding:12px;background:var(--borderLight);border-radius:8px;border-left:3px solid var(--blue)"><p class="text-xs"><strong>💡 Próximo Paso:</strong> Valida este nicho creando 3-5 libros de prueba. Mide: CTR, conversión y rating.</p></div>',s+="<h2>Detalles de tu Análisis:</h2>",s+='<div style="background:var(--bgInput);border-radius:8px;padding:12px;margin-top:8px;font-size:12px;font-family:monospace">',s+="<div>Demanda: <strong>"+e.toLocaleString("es-ES")+'</strong></div><div>Competencia: <strong>'+n.toLocaleString("es-ES")+'</strong></div><div>Ratio: <strong>'+r.toFixed(3)+'</strong></div><div>Ingresos/Venta: <strong>$'+t.toFixed(2)+'</strong></div><div>Ingreso Potencial Mensual: <strong>$'+o.toFixed(2)+"</strong></div>",s+="</div>",d.innerHTML=s,d.style.display="block",localStorage.setItem("lastValidation",JSON.stringify(i)),console.log("Validación guardada:",i)}else alert("Por favor completa todos los campos")}function loadLastValidation(){const e=localStorage.getItem("lastValidation");if(e)try{const n=JSON.parse(e);document.getElementById("demand").value=n.demand,document.getElementById("competition").value=n.competition,document.getElementById("revenue").value=n.revenue,validateNiche()}catch(n){console.error("Error al cargar validación anterior:",n)}}document.addEventListener("DOMContentLoaded",loadLastValidation);const mp={demand:document.getElementById("demand"),competition:document.getElementById("competition"),revenue:document.getElementById("revenue")};Object.keys(mp).forEach(e=>{mp[e].addEventListener("change",()=>{const n=parseInt(mp.demand.value),t=parseInt(mp.competition.value);if(n&&t){const d=n/t;let r="";d<.5?r="🔴 Saturado":d<1?r="⚠️ Poco viable":d<2?r="⚠️ Moderado":r="✅ Promisorio",document.getElementById("results").innerHTML='<div style="text-align:center;padding:12px;background:var(--borderLight);border-radius:8px;margin:8px 0"><p class="text-sm" style="color:var(--textMuted)">'+r+" — Ratio: "+d.toFixed(2)+"</p></div>",document.getElementById("results").style.display="block"}})})
+</script>
+</body>
+</html>
