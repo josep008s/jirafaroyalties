@@ -1,1 +1,988 @@
-READ_FROM_FILE
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piloto de Ads KDP — Jirafa Royalties</title>
+<meta name="description" content="Planifica y diagnostica tus campa\u00F1as de Amazon Ads para KDP. Calcula presupuestos, ACOS y rentabilidad. Herramienta gratuita de El Sistema Jirafa.">
+<meta property="og:title" content="Piloto de Ads KDP — Jirafa Royalties">
+<meta property="og:description" content="Calcula tu inversi\u00F3n en Amazon Ads y diagnostica campa\u00F1as con datos reales. Importa CSV de Ads.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.jirafaroyalties.com/piloto">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#F97316;--amber:#F59E0B;--amberLight:#FCD34D;
+  --bg:#1C1917;--bgCard:#292524;--bgInput:#1C1917;
+  --border:#44403C;--borderLight:#57534E;
+  --text:#FAFAF9;--textMuted:#A8A29E;--textDim:#78716C;
+  --green:#22C55E;--greenBg:#052E16;--greenBorder:#166534;
+  --red:#EF4444;--redBg:#450A0A;--redBorder:#991B1B;
+  --yellow:#EAB308;--yellowBg:#422006;--yellowBorder:#854D0E;
+  --gold:#D97706;--blue:#3B82F6;--blueBg:#172554;--blueBorder:#1E40AF;
+  --cyan:#22D3EE;--cyanBg:#083344;--cyanBorder:#155E75;
+  --purple:#A78BFA;--purpleBg:#1E1B4B;--purpleBorder:#4338CA;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,system-ui,sans-serif;padding:20px 16px;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto}
+.card{background:var(--bgCard);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px}
+input[type=number],input[type=text]{background:var(--bgInput);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:15px;width:100%;outline:none;transition:border .2s;font-family:inherit;-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input:focus{border-color:var(--orange)}
+button{font-family:inherit;cursor:pointer}
+.btn-primary{background:var(--orange);color:#fff;border:none;border-radius:10px;padding:14px 24px;font-size:15px;font-weight:700;width:100%;transition:all .15s}
+.btn-primary:disabled{background:var(--border);opacity:.4;cursor:not-allowed}
+.btn-ghost{background:var(--bgInput);color:var(--textMuted);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;transition:all .15s}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+.lbl{color:var(--textMuted);font-size:11px;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:4px}
+.section-title{font-size:11px;font-weight:700;color:var(--textDim);text-transform:uppercase;letter-spacing:1px;margin:0 0 12px}
+.mp-btn{border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);background:var(--bgInput);color:var(--text);font-weight:600}
+.mp-btn.active{background:rgba(249,115,22,.09);border-color:var(--orange);color:var(--orange)}
+.mode-card{background:var(--bgInput);border:2px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;text-align:center}
+.mode-card:hover{border-color:var(--borderLight)}
+.mode-card.active{border-color:var(--orange);background:rgba(249,115,22,.06)}
+.kpi-box{background:var(--bgInput);border-radius:8px;padding:12px 8px;text-align:center}
+.kpi-label{color:var(--textDim);font-size:9px;margin-bottom:3px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.kpi-value{font-size:17px;font-weight:800}
+.result-box{border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.tip{background:var(--bgInput);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--textMuted);line-height:1.6;display:flex;gap:10px;margin-bottom:8px;align-items:flex-start}
+.tip b{color:var(--text)}
+.camp-row{background:var(--bgInput);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;transition:all .3s ease}
+.camp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.camp-name{font-size:13px;font-weight:700}
+.camp-tag{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700}
+.camp-stat{text-align:center}
+.camp-stat-label{font-size:9px;color:var(--textDim);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.camp-stat-value{font-size:14px;font-weight:700;margin-top:1px}
+.diag-metric{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.diag-metric:last-child{border-bottom:none}
+.diag-name{font-size:13px;font-weight:600}
+.diag-value{font-size:15px;font-weight:800}
+.diag-badge{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700}
+.gauge-ring{position:relative;display:flex;align-items:center;justify-content:center}
+.gauge-center{position:absolute;text-align:center}
+.copy-btn{background:var(--bgInput);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;color:var(--text);font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.copy-btn:hover{border-color:var(--orange);color:var(--orange)}
+.nav-bar{display:flex;gap:8px;margin-top:6px}
+.nav-bar button{flex:1}
+hr.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+.toggle-pill{display:inline-flex;background:var(--bgInput);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.toggle-pill button{padding:7px 14px;font-size:12px;font-weight:700;border:none;background:transparent;color:var(--textMuted);cursor:pointer;transition:all .15s}
+.toggle-pill button.active{background:var(--orange);color:#fff}
+.ku-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bgInput);transition:all .2s}
+.ku-toggle.active{border-color:var(--purple);background:rgba(167,139,250,.08)}
+.ku-toggle .ku-dot{width:36px;height:20px;border-radius:10px;background:var(--border);position:relative;transition:background .2s}
+.ku-toggle.active .ku-dot{background:var(--purple)}
+.ku-toggle .ku-dot::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.ku-toggle.active .ku-dot::after{transform:translateX(16px)}
+/* Drop zone */
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:28px 16px;text-align:center;transition:all .2s;cursor:pointer;position:relative}
+.drop-zone:hover,.drop-zone.dragover{border-color:var(--orange);background:rgba(249,115,22,.04)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+/* CSV campaign table */
+.csv-table{width:100%;border-collapse:collapse;font-size:11px}
+.csv-table th{text-align:left;padding:6px 5px;color:var(--textDim);font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap}
+.csv-table td{padding:7px 5px;border-bottom:1px solid var(--border);white-space:nowrap}
+.csv-table tr:last-child td{border-bottom:none}
+.csv-table .num{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.csv-table .camp-name-cell{max-width:110px;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.csv-agg{background:var(--bgCard);border-top:2px solid var(--orange)}
+.csv-agg td{font-weight:800;color:var(--orange)}
+/* Saved indicator */
+.saved-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@media(max-width:400px){.grid-3{grid-template-columns:1fr 1fr}.grid-4{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════
+const MPS = {
+  es:{label:"Amazon.es",flag:"🇪🇸",currency:"€",locale:"es-ES",
+    royalty:{high:{min:2.99,max:9.99,rate:.70},low:{rate:.35}},
+    cpcRange:{low:.05,mid:.15,high:.35},
+    crRange:{low:.05,mid:.12,high:.20},
+    ctrRange:{bad:.002,ok:.0035,good:.005},
+    launchBudgetMin:5,launchBudgetRec:10,kenpRate:0.0045},
+  com:{label:"Amazon.com",flag:"🇺🇸",currency:"$",locale:"en-US",
+    royalty:{high:{min:2.99,max:9.99,rate:.70},low:{rate:.35}},
+    cpcRange:{low:.15,mid:.35,high:.75},
+    crRange:{low:.05,mid:.10,high:.18},
+    ctrRange:{bad:.002,ok:.0035,good:.005},
+    launchBudgetMin:10,launchBudgetRec:20,kenpRate:0.0045}
+};
+
+const LAUNCH_CAMPS = [
+  {id:"amplia",   name:"Manual Amplia",       icon:"🔍",type:"Keywords – Amplia",   kw:"15-30 keywords relevantes",
+   desc:"Descubrir qué keywords funcionan",bids:{es:0.50,com:0.65},adjust:100,budgetD0:.40,budgetD15:.30,priority:"alta",
+   avgCPCmult:{es:0.82,com:0.85},tip:"Cosecha: mueve ganadores a Manual Exacta"},
+  {id:"exacta",   name:"Manual Exacta",       icon:"🎯",type:"Keywords – Exacta",   kw:"1 keyword principal (la del título)",
+   desc:"Dominar tu keyword principal",    bids:{es:0.80,com:1.00},adjust:150,budgetD0:.30,budgetD15:.25,priority:"alta",
+   avgCPCmult:{es:0.86,com:0.90},tip:"Puja agresiva para posicionar arriba en tu KW top"},
+  {id:"producto", name:"Producto Competencia", icon:"⚔️",type:"Producto – ASINs",    kw:"15-30 ASINs de libros similares",
+   desc:"Aparecer junto a competidores",   bids:{es:0.80,com:1.00},adjust:100,budgetD0:.15,budgetD15:.10,priority:"media",
+   avgCPCmult:{es:0.56,com:0.60},tip:"Roba visitas a la competencia directa"},
+  {id:"propio",   name:"Producto Propio",      icon:"📚",type:"Producto – Tus ASINs",kw:"Tus otros libros relacionados",
+   desc:"Cross-sell entre tus propios libros",bids:{es:1.00,com:1.20},adjust:100,budgetD0:0,budgetD15:0,priority:"baja",
+   avgCPCmult:{es:0.50,com:0.55},tip:"Solo si tienes más de 1 libro publicado"},
+  {id:"categoria",name:"Categoría",            icon:"📂",type:"Producto – Categorías",kw:"5 categorías relevantes de tu nicho",
+   desc:"Visibilidad amplia en tu nicho",  bids:{es:1.00,com:1.20},adjust:100,budgetD0:.15,budgetD15:.10,priority:"media",
+   avgCPCmult:{es:0.50,com:0.55},tip:"Captura lectores que navegan por categoría"},
+  {id:"auto",     name:"Automática",           icon:"🤖",type:"Auto – Close+Loose",  kw:"Amazon decide (close + loose match)",
+   desc:"Descubrir keywords que no tenías",bids:{es:0.38,com:0.49},adjust:0,  budgetD0:0,  budgetD15:.25,priority:"baja",
+   avgCPCmult:{es:0.60,com:0.65},tip:"Activa desde día 15. Puja = 75% de Manual Amplia"},
+];
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+const LS_KEY = 'piloto-ads-kdp';
+let S = {
+  step:0, marketplace:"es",
+  precio:"", modo:"",
+  enKU:false, paginasKENP:"",
+  presupuestoDia:"", inversionLibro:"",
+  fase:"d0",
+  impresiones:"", clics:"", pedidos:"", gastoTotal:"", diasCamp:"",
+  diagTab:"manual", // "manual" | "csv"
+  csvCamps:null,    // parsed CSV campaigns array
+};
+
+// ═══════════════════════════════════════════════════════════
+// LOCALSTORAGE
+// ═══════════════════════════════════════════════════════════
+function saveState(){
+  try{
+    const toSave = {...S};
+    // Don't save csvCamps to localStorage (can be large)
+    delete toSave.csvCamps;
+    localStorage.setItem(LS_KEY, JSON.stringify(toSave));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      Object.assign(S, saved);
+      S.csvCamps = null; // always reset CSV data
+    }
+  }catch(e){}
+}
+function resetState(){
+  localStorage.removeItem(LS_KEY);
+  S = {step:0,marketplace:"es",precio:"",modo:"",enKU:false,paginasKENP:"",
+    presupuestoDia:"",inversionLibro:"",fase:"d0",
+    impresiones:"",clics:"",pedidos:"",gastoTotal:"",diasCamp:"",
+    diagTab:"manual",csvCamps:null};
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const fmt = (n,d=2) => Number(n).toFixed(d);
+const fmtI = n => Math.round(n).toLocaleString("es-ES");
+function mp(){ return MPS[S.marketplace]; }
+function cur(){ return mp().currency; }
+function royaltyRate(p){ const b=mp().royalty; return (p>=b.high.min&&p<=b.high.max)?b.high.rate:b.low.rate; }
+function royaltyUnit(p){ return +(p*royaltyRate(p)).toFixed(2); }
+function breakEvenACOS(p){ return +(royaltyRate(p)*100).toFixed(1); }
+function kenpIncome(){ const pg=parseInt(S.paginasKENP)||0; return(!S.enKU||pg<=0)?0:+(pg*mp().kenpRate).toFixed(2); }
+function effectiveIncome(p){ const r=royaltyUnit(p),k=kenpIncome(); return(!S.enKU||k<=0)?r:+((r*.5+k*.5)).toFixed(2); }
+function effectiveBE(p){ return +((effectiveIncome(p)/p)*100).toFixed(1); }
+
+function healthBadge(health){
+  const map={excelente:{bg:'rgba(34,197,94,.12)',c:'var(--green)',t:'🚀 Excelente'},
+    bueno:{bg:'rgba(34,211,238,.12)',c:'var(--cyan)',t:'✅ Bueno'},
+    ajustado:{bg:'rgba(234,179,8,.12)',c:'var(--yellow)',t:'⚠️ Ajustado'},
+    bajo:{bg:'rgba(249,115,22,.12)',c:'var(--orange)',t:'⚠️ Bajo'},
+    alto:{bg:'rgba(249,115,22,.12)',c:'var(--orange)',t:'⚠️ Alto'},
+    'crítico':{bg:'rgba(239,68,68,.12)',c:'var(--red)',t:'🔴 Crítico'}};
+  const m2=map[health]||map.bajo;
+  return `<span class="diag-badge" style="background:${m2.bg};color:${m2.c}">${m2.t}</span>`;
+}
+function acosColor(acosH){ return acosH==='excelente'?'var(--green)':acosH==='bueno'?'var(--cyan)':acosH==='ajustado'?'var(--yellow)':acosH==='alto'?'var(--orange)':'var(--red)'; }
+function ctrH(v,m){ return v>=m.ctrRange.good?'excelente':v>=m.ctrRange.ok?'bueno':v>=m.ctrRange.bad?'bajo':'crítico'; }
+function crH(v){ return v>=.15?'excelente':v>=.08?'bueno':v>=.05?'bajo':'crítico'; }
+function acosH(v,be){ return v<=be*.5?'excelente':v<=be*.75?'bueno':v<=be?'ajustado':v<=be*1.5?'alto':'crítico'; }
+function cpcH(v,m){ return v<=m.cpcRange.low?'excelente':v<=m.cpcRange.mid?'bueno':v<=m.cpcRange.high?'alto':'crítico'; }
+
+// ═══════════════════════════════════════════════════════════
+// CSV PARSER
+// ═══════════════════════════════════════════════════════════
+function parseCSV(text){
+  // Detect separator
+  const firstLine = text.split('\n')[0];
+  const sep = firstLine.split('\t').length > 3 ? '\t' : firstLine.split(';').length > 3 ? ';' : ',';
+
+  const lines = text.trim().split('\n');
+  if(lines.length < 2) return null;
+
+  // Parse headers
+  const headers = parseLine(lines[0], sep).map(h => h.trim().toLowerCase());
+
+  // Detect column indices
+  const col = detectColumns(headers);
+  if(!col.campaign || col.impressions === -1) return null;
+
+  const camps = [];
+  for(let i=1; i<lines.length; i++){
+    const vals = parseLine(lines[i], sep);
+    if(vals.length < 3) continue;
+    const name = vals[col.campaign]?.trim().replace(/^"|"$/g,'') || '';
+    if(!name) continue;
+    camps.push({
+      name,
+      imp: cleanNum(vals[col.impressions]),
+      clicks: cleanNum(vals[col.clicks]),
+      orders: cleanNum(vals[col.orders]),
+      spend: cleanNum(vals[col.spend]),
+      sales: cleanNum(vals[col.sales]),
+    });
+  }
+  return camps.length > 0 ? camps : null;
+}
+
+function parseLine(line, sep){
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for(let i=0; i<line.length; i++){
+    const ch = line[i];
+    if(ch === '"'){ inQuotes = !inQuotes; continue; }
+    if(ch === sep && !inQuotes){ result.push(current); current = ''; continue; }
+    current += ch;
+  }
+  result.push(current);
+  return result;
+}
+
+function detectColumns(headers){
+  const find = (patterns) => {
+    for(const p of patterns){
+      const idx = headers.findIndex(h => h.includes(p));
+      if(idx !== -1) return idx;
+    }
+    return -1;
+  };
+  return {
+    campaign: Math.max(0, find(['campaign name','campaña','campaign','nombre de campaña','nombre campaña'])),
+    impressions: find(['impressions','impresiones','impr']),
+    clicks: find(['clicks','clics']),
+    orders: find(['orders','pedidos','7 day total orders','total orders','14 day total orders']),
+    spend: find(['spend','gasto','cost','coste','inversión']),
+    sales: find(['sales','ventas','7 day total sales','total sales','14 day total sales']),
+  };
+}
+
+function cleanNum(val){
+  if(!val) return 0;
+  val = val.toString().trim().replace(/^"|"$/g,'');
+  // Remove currency symbols and percentage signs
+  val = val.replace(/[€$£%,]/g,'').replace(/\./g, (m,o,s) => {
+    // Detect European format: if there's a comma after, this dot is thousands separator
+    const afterDot = s.substring(o+1);
+    if(afterDot.includes(',')) return ''; // thousands separator
+    return m; // decimal point
+  }).replace(',','.');
+  return parseFloat(val) || 0;
+}
+
+function handleCSVFile(file){
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const camps = parseCSV(e.target.result);
+    if(camps && camps.length > 0){
+      S.csvCamps = camps;
+      S.diagTab = "csv";
+      // Also fill aggregate fields from CSV
+      const agg = aggregateCSV(camps);
+      S.impresiones = String(agg.imp);
+      S.clics = String(agg.clicks);
+      S.pedidos = String(agg.orders);
+      S.gastoTotal = String(agg.spend.toFixed(2));
+      render();
+    } else {
+      alert('No se pudo leer el CSV. Asegúrate de que es un informe de campañas de Amazon Ads.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function aggregateCSV(camps){
+  return camps.reduce((a,c) => ({
+    imp: a.imp + c.imp,
+    clicks: a.clicks + c.clicks,
+    orders: a.orders + c.orders,
+    spend: a.spend + c.spend,
+    sales: a.sales + c.sales,
+  }), {imp:0,clicks:0,orders:0,spend:0,sales:0});
+}
+
+// ═══════════════════════════════════════════════════════════
+// SETVAL / NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function setVal(key,val){ S[key]=val; saveState(); updateLive(); }
+function toggleKU(){ S.enKU=!S.enKU; saveState(); render(); }
+function setFase(f){ S.fase=f; saveState(); render(); }
+function setDiagTab(t){ S.diagTab=t; render(); }
+function go(step){ S.step=step; saveState(); render(); window.scrollTo({top:0,behavior:'smooth'}); }
+function selectMode(modo){ S.modo=modo; go(2); }
+
+// ═══════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════
+function render(){
+  const app=$("app");
+  let h="";
+
+  h+=`<div style="text-align:center;margin-bottom:18px">
+    <div style="font-size:30px;margin-bottom:2px">🎯</div>
+    <h1 style="font-size:19px;font-weight:800;margin-bottom:2px">Piloto de Ads KDP</h1>
+    <div style="display:flex;justify-content:center;align-items:center;gap:8px">
+      <p style="color:var(--textDim);font-size:11px">Jirafa Royalties — Cap. 5</p>
+      ${S.precio ? `<span style="font-size:9px;color:var(--green)"><span class="saved-dot"></span>guardado</span>` : ''}
+    </div>
+  </div>`;
+
+  const steps=["Tu libro","Modo","Configurar"];
+  h+=`<div style="display:flex;gap:4px;margin-bottom:16px">
+    ${steps.map((s,i)=>`<div style="flex:1;text-align:center">
+      <div style="height:3px;border-radius:2px;background:${i<=S.step?'var(--orange)':'var(--border)'};transition:background .3s"></div>
+      <div style="font-size:9px;margin-top:4px;color:${i===S.step?'var(--orange)':'var(--textDim)'};font-weight:${i===S.step?'700':'400'}">${s}</div>
+    </div>`).join("")}
+  </div>`;
+
+  if(S.step===0) h+=renderStep0();
+  else if(S.step===1) h+=renderStep1();
+  else if(S.step===2) h+=S.modo==="planificar"?renderPlanificar():renderDiagnosticar();
+
+  h+=`<div style="text-align:center;padding:14px">
+    <div style="font-size:10px;color:var(--textDim);margin-bottom:6px">Jirafa Royalties · Cap. 5 — Amazon Ads</div>
+    ${S.precio ? `<button onclick="resetState()" style="background:none;border:none;color:var(--textDim);font-size:10px;cursor:pointer;text-decoration:underline">Resetear datos guardados</button>` : ''}
+  </div>`;
+  app.innerHTML=h;
+  updateLive();
+  bindDropZone();
+}
+
+// ─── STEP 0 ────────────────────────────────────────────────
+function renderStep0(){
+  const m=mp(),c=cur(),price=parseFloat(S.precio)||0;
+  return `
+  <div class="card">
+    <div class="section-title">Marketplace</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:18px">
+      ${Object.entries(MPS).map(([k,v])=>`
+        <button class="mp-btn ${S.marketplace===k?'active':''}" onclick="S.marketplace='${k}';saveState();render()">
+          ${v.flag} ${v.label}
+        </button>`).join("")}
+    </div>
+    <div class="section-title">Precio de tu ebook</div>
+    <input type="number" id="inp-precio" value="${S.precio}" step="0.01" min="0.99" max="99.99"
+      placeholder="ej: 4.99" oninput="setVal('precio',this.value)" style="font-size:20px;text-align:center;font-weight:700;padding:14px">
+    <div id="live-royalty" style="margin-top:14px"></div>
+    <hr class="divider">
+    <div class="ku-toggle ${S.enKU?'active':''}" onclick="toggleKU()">
+      <div class="ku-dot"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:${S.enKU?'var(--purple)':'var(--textMuted)'}">Kindle Unlimited</div>
+        <div style="font-size:10px;color:var(--textDim)">¿Tu libro está inscrito en KDP Select / KU?</div>
+      </div>
+    </div>
+    ${S.enKU?`<div style="margin-top:12px">
+      <label class="lbl">Páginas KENP <span style="font-weight:400;text-transform:none;color:var(--textDim)">(las ves en tu panel KDP)</span></label>
+      <input type="number" id="inp-kenp" value="${S.paginasKENP}" min="1" max="9999" placeholder="ej: 250" oninput="setVal('paginasKENP',this.value)">
+      <div id="live-kenp" style="margin-top:8px"></div>
+    </div>`:''}
+  </div>
+  <div class="nav-bar">
+    <button class="btn-primary" id="nav-next" ${!price?'disabled':''} onclick="go(1)">Siguiente →</button>
+  </div>`;
+}
+
+// ─── STEP 1 ────────────────────────────────────────────────
+function renderStep1(){
+  return `
+  <div class="card" style="padding:20px">
+    <div class="section-title" style="text-align:center;margin-bottom:16px">¿En qué punto estás?</div>
+    <div class="grid-2" style="gap:12px">
+      <div class="mode-card" onclick="selectMode('planificar')">
+        <div style="font-size:32px;margin-bottom:8px">🚀</div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:4px">Voy a lanzar</div>
+        <div style="font-size:11px;color:var(--textMuted);line-height:1.4">Quiero saber qué campañas crear, qué pujas poner y cuánto gastar</div>
+      </div>
+      <div class="mode-card" onclick="selectMode('diagnosticar')">
+        <div style="font-size:32px;margin-bottom:8px">🩺</div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:4px">Ya tengo ads</div>
+        <div style="font-size:11px;color:var(--textMuted);line-height:1.4">Quiero saber si me van bien y qué ajustar</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar"><button class="btn-ghost" onclick="go(0)">← Atrás</button></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MODE A: PLANIFICAR
+// ═══════════════════════════════════════════════════════════
+function renderPlanificar(){
+  const m=mp(),c=cur(),price=parseFloat(S.precio),rUnit=royaltyUnit(price),beACOS=breakEvenACOS(price);
+  const budget=parseFloat(S.presupuestoDia)||m.launchBudgetRec, inv=parseFloat(S.inversionLibro)||0;
+  const isD15=S.fase==="d15", kuI=kenpIncome(), effI=effectiveIncome(price);
+  const effBE=S.enKU&&kuI>0?effectiveBE(price):null;
+  const targetACOS=+(beACOS*.75).toFixed(1), avgCR=m.crRange.mid, maxCPC=+(rUnit*avgCR).toFixed(2), mk=S.marketplace;
+  const budKey=isD15?'budgetD15':'budgetD0';
+  const camps=LAUNCH_CAMPS.map(camp=>{
+    const bid=camp.bids[mk],avgCPC=+(bid*(camp.avgCPCmult[mk]||.80)).toFixed(2),budPct=camp[budKey],budDay=+(budget*budPct).toFixed(2);
+    return{...camp,bid,avgCPC,budPct,budDay};
+  });
+  const active=camps.filter(c2=>c2.budPct>0);
+  const totBP=active.reduce((s,c2)=>s+c2.budPct,0);
+  const wCPC=totBP>0?active.reduce((s,c2)=>s+c2.avgCPC*c2.budPct,0)/totBP:m.cpcRange.mid;
+  const clicks=budget/wCPC, salesD=+(clicks*avgCR).toFixed(1);
+  const incPC=S.enKU&&kuI>0?effI:rUnit, incD=+(salesD*incPC).toFixed(2), netD=+(incD-budget).toFixed(2);
+  const beD=inv>0?Math.ceil(inv/Math.max(netD,.01)):null;
+  const projs=[30,60,90].map(d=>({d,sp:budget*d,sales:Math.round(salesD*d),inc:+(Math.round(salesD*d)*incPC).toFixed(0),net:Math.round(salesD*d)*incPC-budget*d}));
+
+  let h=`<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="section-title" style="margin:0">🚀 Planificador de lanzamiento</div>
+      <span style="font-size:11px;color:var(--orange);font-weight:700">${m.flag} ${m.label}</span>
+    </div>
+    <div class="result-box" style="background:var(--bgInput);border:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:12px;color:var(--textMuted)">Tu ebook</div><div style="font-size:18px;font-weight:800">${c}${fmt(price)}</div></div>
+        <div style="text-align:center"><div style="font-size:12px;color:var(--textMuted)">Regalía</div><div style="font-size:18px;font-weight:800;color:var(--green)">${c}${fmt(rUnit)}</div></div>
+        <div style="text-align:right"><div style="font-size:12px;color:var(--textMuted)">ACOS break-even</div><div style="font-size:18px;font-weight:800;color:var(--orange)">${beACOS}%</div></div>
+      </div>
+      ${S.enKU&&kuI>0?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:10px;color:var(--purple);font-weight:700">📖 KINDLE UNLIMITED</div><div style="font-size:11px;color:var(--textMuted)">Ingreso por préstamo</div></div>
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--purple)">${c}${fmt(kuI)}</div></div>
+        <div style="text-align:right"><div style="font-size:10px;color:var(--textDim)">ACOS real</div><div style="font-size:16px;font-weight:800;color:var(--purple)">${effBE}%</div></div>
+      </div>`:''}
+    </div>
+    <div class="grid-2" style="margin-top:14px">
+      <div><label class="lbl">Presupuesto / día (${c})</label>
+        <input type="number" id="inp-budget" value="${S.presupuestoDia}" step="1" min="1" placeholder="${m.launchBudgetRec}" oninput="setVal('presupuestoDia',this.value)">
+        <div style="font-size:10px;color:var(--textDim);margin-top:3px">Mín. recomendado: ${c}${m.launchBudgetMin}</div></div>
+      <div><label class="lbl">Inversión libro (${c}) <span style="font-weight:400;text-transform:none;color:var(--textDim)">opcional</span></label>
+        <input type="number" id="inp-inv" value="${S.inversionLibro}" step="10" min="0" placeholder="ej: 200" oninput="setVal('inversionLibro',this.value)">
+        <div style="font-size:10px;color:var(--textDim);margin-top:3px">Portada + formateo + otros</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="section-title" style="margin:0">📋 Configura así en Amazon Ads</div>
+      <div class="toggle-pill"><button class="${!isD15?'active':''}" onclick="setFase('d0')">Día 0</button><button class="${isD15?'active':''}" onclick="setFase('d15')">Día 15+</button></div>
+    </div>
+    ${isD15?`<div class="tip" style="margin-bottom:14px;border:1px solid var(--purpleBorder);background:var(--purpleBg)"><span style="font-size:15px">🔄</span><span style="color:var(--purple)"><b>Fase 2 (día 15+):</b> Se activa Automática y se redistribuyen presupuestos. Revisa search terms.</span></div>`:''}
+    <div class="result-box" style="background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.25);margin-bottom:16px">
+      <div class="grid-3">
+        <div style="text-align:center"><div style="font-size:10px;color:var(--textDim);font-weight:700">ACOS OBJETIVO</div><div style="font-size:22px;font-weight:800;color:var(--orange)">${targetACOS}%</div><div style="font-size:9px;color:var(--textMuted)">Dashboard</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:var(--textDim);font-weight:700">CPC MÁXIMO</div><div style="font-size:22px;font-weight:800;color:var(--amber)">${c}${fmt(maxCPC)}</div><div style="font-size:9px;color:var(--textMuted)">Nunca más</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:var(--textDim);font-weight:700">PPTO / DÍA</div><div style="font-size:22px;font-weight:800;color:var(--text)">${c}${fmt(budget,0)}</div><div style="font-size:9px;color:var(--textMuted)">Total</div></div>
+      </div>
+    </div>
+    <div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11px;color:var(--textMuted);font-weight:600">6 campañas PPC Pro — ${isD15?'Fase 2':'Fase 1'}:</span>
+      <span style="font-size:10px;color:var(--textDim)">${active.length} activas</span>
+    </div>
+    ${camps.map(c2=>{
+      const pCol=c2.priority==='alta'?'var(--orange)':c2.priority==='media'?'var(--amber)':'var(--textDim)';
+      const pBg=c2.priority==='alta'?'rgba(249,115,22,.12)':c2.priority==='media'?'rgba(245,158,11,.12)':'rgba(120,113,108,.12)';
+      const isAct=c2.budPct>0,wasOff=c2.budgetD0===0&&c2.budgetD15===0;
+      let tag,opq;
+      if(wasOff){tag='Solo si aplica';opq='opacity:.55;border-style:dashed';}
+      else if(!isAct&&!isD15){tag='Desde día 15';opq='opacity:.55;border-style:dashed';}
+      else if(!isAct&&isD15){tag='Reducida';opq='opacity:.55;border-style:dashed';}
+      else if(isD15&&c2.budgetD0===0){tag='🆕 Nueva';opq='border-color:var(--purple)';}
+      else{tag=isD15?'Activa':'Día 0';opq='';}
+      return`<div class="camp-row" style="${opq}">
+        <div class="camp-header"><div><span style="margin-right:4px">${c2.icon}</span><span class="camp-name">${c2.name}</span></div><span class="camp-tag" style="background:${pBg};color:${pCol}">${tag}</span></div>
+        <div style="font-size:11px;color:var(--textMuted);margin-bottom:4px">${c2.desc}</div>
+        <div style="font-size:10px;color:var(--textDim);margin-bottom:8px">📎 ${c2.kw}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
+          <div class="camp-stat"><div class="camp-stat-label">Puja</div><div class="camp-stat-value">${cur()}${fmt(c2.bid)}</div></div>
+          <div class="camp-stat"><div class="camp-stat-label">${c2.adjust?'Ajuste':'—'}</div><div class="camp-stat-value">${c2.adjust?'+'+c2.adjust+'%':'—'}</div></div>
+          <div class="camp-stat"><div class="camp-stat-label">CPC est.</div><div class="camp-stat-value" style="color:var(--textMuted)">~${cur()}${fmt(c2.avgCPC)}</div></div>
+          <div class="camp-stat"><div class="camp-stat-label">Ppto/día</div><div class="camp-stat-value">${isAct?cur()+fmt(c2.budDay):'—'}</div></div>
+        </div>
+        <div style="font-size:10px;color:var(--cyan);margin-top:6px">💡 ${c2.tip}</div>
+      </div>`;}).join("")}
+  </div>
+
+  <div class="card">
+    <div class="section-title">📊 Proyección ${isD15?'(fase 15+)':'(lanzamiento)'}</div>
+    <div style="font-size:11px;color:var(--textMuted);margin-bottom:12px">CPC ponderado ~${c}${fmt(wCPC)}, conv. ${fmt(avgCR*100,0)}%
+      ${S.enKU&&kuI>0?`<br><span style="color:var(--purple)">📖 Incl. KU (${c}${fmt(kuI)}/préstamo, ~50% conv.)</span>`:''}</div>
+    <div class="grid-4" style="margin-bottom:14px">
+      <div class="kpi-box"><div class="kpi-label">Clicks/día</div><div class="kpi-value" style="font-size:15px">${fmt(clicks,0)}</div></div>
+      <div class="kpi-box"><div class="kpi-label">Ventas/día</div><div class="kpi-value" style="font-size:15px">${salesD}</div></div>
+      <div class="kpi-box"><div class="kpi-label">${S.enKU&&kuI>0?'Ingreso':'Regalía'}/día</div><div class="kpi-value" style="font-size:15px;color:var(--green)">${c}${fmt(incD)}</div></div>
+      <div class="kpi-box"><div class="kpi-label">Neto/día</div><div class="kpi-value" style="font-size:15px;color:${netD>=0?'var(--green)':'var(--red)'}">${netD>=0?'+':''}${c}${fmt(netD)}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:50px 1fr 1fr 1fr 1fr;gap:4px;padding:6px 0;border-bottom:1px solid var(--border);font-size:9px;color:var(--textDim);font-weight:700;text-transform:uppercase">
+      <div></div><div style="text-align:right">Gasto</div><div style="text-align:right">Ventas</div><div style="text-align:right">${S.enKU&&kuI>0?'Ingreso':'Regalías'}</div><div style="text-align:right">Neto</div>
+    </div>
+    ${projs.map(p=>`<div style="display:grid;grid-template-columns:50px 1fr 1fr 1fr 1fr;gap:4px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center">
+      <div style="font-weight:700">${p.d}d</div><div style="text-align:right;color:var(--red)">−${c}${fmtI(p.sp)}</div><div style="text-align:right">${p.sales}</div>
+      <div style="text-align:right;color:var(--green)">${c}${fmtI(p.inc)}</div><div style="text-align:right;font-weight:700;color:${p.net>=0?'var(--green)':'var(--red)'}">${p.net>=0?'+':''}${c}${fmtI(p.net)}</div>
+    </div>`).join("")}
+    ${inv>0?`<hr class="divider"><div class="result-box" style="background:var(--blueBg);border:1px solid var(--blueBorder)">
+      <div style="font-size:12px;color:var(--textMuted);margin-bottom:4px">⏱️ Recuperación inversión (${c}${fmtI(inv)})</div>
+      <div style="font-size:20px;font-weight:800;color:var(--cyan)">${beD&&beD<365?`~${beD} días`:netD<=0?'No rentable':'> 1 año'}</div>
+    </div>`:''}
+  </div>
+
+  <div class="card">
+    <div class="section-title">⚡ Reglas de optimización (semana 2+)</div>
+    <div class="tip"><span style="font-size:15px;flex-shrink:0">🔴</span><span><b>Pausa</b> keywords con >20 clicks y 0 ventas → negativas</span></div>
+    <div class="tip"><span style="font-size:15px;flex-shrink:0">🟡</span><span><b>Reduce puja</b> si ACOS > ${beACOS}%. Nueva puja = CPC × (${targetACOS} ÷ ACOS actual)</span></div>
+    <div class="tip"><span style="font-size:15px;flex-shrink:0">🟢</span><span><b>Sube presupuesto</b> 20% si ACOS < ${targetACOS}% tras 7 días</span></div>
+    <div class="tip"><span style="font-size:15px;flex-shrink:0">🔄</span><span><b>Mueve ganadores</b> Automática → Manual Exacta</span></div>
+    <div class="tip"><span style="font-size:15px;flex-shrink:0">📊</span><span><b>Mínimo 7 días</b> antes de decidir. La paciencia paga.</span></div>
+    ${S.enKU?`<div class="tip" style="border:1px solid var(--purpleBorder)"><span style="font-size:15px;flex-shrink:0">📖</span><span style="color:var(--purple)"><b>KU tip:</b> ACOS de Amazon NO incluye KENP. Rentabilidad real es mejor.</span></div>`:''}
+  </div>
+  <div class="card" style="text-align:center"><button class="copy-btn" onclick="copyPlan()">📋 Copiar configuración completa</button></div>
+  <div class="nav-bar"><button class="btn-ghost" onclick="go(1)">← Cambiar modo</button></div>`;
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MODE B: DIAGNOSTICAR
+// ═══════════════════════════════════════════════════════════
+function renderDiagnosticar(){
+  const m=mp(),c=cur();
+  let h=`<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="section-title" style="margin:0">🩺 Diagnóstico de campaña</div>
+      <span style="font-size:11px;color:var(--orange);font-weight:700">${m.flag} ${m.label}</span>
+    </div>
+
+    <!-- Tab bar: Manual / CSV -->
+    <div style="display:flex;gap:0;margin-bottom:16px;background:var(--bgInput);border-radius:8px;border:1px solid var(--border);overflow:hidden">
+      <button onclick="setDiagTab('manual')" style="flex:1;padding:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s;
+        background:${S.diagTab==='manual'?'var(--orange)':'transparent'};color:${S.diagTab==='manual'?'#fff':'var(--textMuted)'}">✏️ Manual</button>
+      <button onclick="setDiagTab('csv')" style="flex:1;padding:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .15s;
+        background:${S.diagTab==='csv'?'var(--orange)':'transparent'};color:${S.diagTab==='csv'?'#fff':'var(--textMuted)'}">📁 Importar CSV</button>
+    </div>
+
+    ${S.diagTab==='manual'?renderDiagManualInputs():renderDiagCSVZone()}
+  </div>
+  <div id="live-diag">${renderDiagOutput()}</div>
+  <div class="nav-bar"><button class="btn-ghost" onclick="go(1)">← Cambiar modo</button></div>`;
+  return h;
+}
+
+function renderDiagManualInputs(){
+  const c=cur();
+  return `
+    <div style="font-size:12px;color:var(--textMuted);margin-bottom:14px">Introduce los datos de tu campaña (Amazon Ads → Campañas):</div>
+    <div class="grid-2" style="margin-bottom:10px">
+      <div><label class="lbl">Impresiones</label><input type="number" id="inp-imp" value="${S.impresiones}" min="0" placeholder="ej: 5000" oninput="setVal('impresiones',this.value)"></div>
+      <div><label class="lbl">Clicks</label><input type="number" id="inp-clicks" value="${S.clics}" min="0" placeholder="ej: 120" oninput="setVal('clics',this.value)"></div>
+    </div>
+    <div class="grid-2" style="margin-bottom:10px">
+      <div><label class="lbl">Pedidos (ventas)</label><input type="number" id="inp-orders" value="${S.pedidos}" min="0" placeholder="ej: 12" oninput="setVal('pedidos',this.value)"></div>
+      <div><label class="lbl">Gasto total (${c})</label><input type="number" id="inp-spend" value="${S.gastoTotal}" min="0" step="0.01" placeholder="ej: 45.00" oninput="setVal('gastoTotal',this.value)"></div>
+    </div>
+    <div style="max-width:50%"><label class="lbl">Días de campaña</label><input type="number" id="inp-days" value="${S.diasCamp}" min="1" max="365" placeholder="ej: 14" oninput="setVal('diasCamp',this.value)"></div>`;
+}
+
+function renderDiagCSVZone(){
+  if(S.csvCamps && S.csvCamps.length > 0){
+    return renderCSVResults();
+  }
+  return `
+    <div class="drop-zone" id="drop-zone">
+      <input type="file" accept=".csv,.tsv,.txt" onchange="if(this.files[0])handleCSVFile(this.files[0])">
+      <div style="font-size:28px;margin-bottom:8px">📁</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">Arrastra tu CSV aquí</div>
+      <div style="font-size:12px;color:var(--textMuted);line-height:1.5;margin-bottom:10px">
+        O haz click para seleccionar archivo
+      </div>
+      <div style="font-size:10px;color:var(--textDim);line-height:1.4">
+        Exporta desde Amazon Ads → Campañas → Exportar informe → CSV<br>
+        Acepta cualquier formato de informe de Amazon Ads (.es o .com)
+      </div>
+    </div>`;
+}
+
+function renderCSVResults(){
+  const camps = S.csvCamps;
+  const price = parseFloat(S.precio);
+  const m = mp(), c = cur();
+  const beACOS2 = breakEvenACOS(price);
+  const agg = aggregateCSV(camps);
+
+  let h = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:12px;color:var(--green);font-weight:700">✓ ${camps.length} campañas importadas</div>
+      <button class="btn-ghost" style="padding:5px 12px;font-size:11px" onclick="S.csvCamps=null;render()">🔄 Otro CSV</button>
+    </div>
+
+    <div style="font-size:10px;color:var(--textDim);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Desglose por campaña:</div>
+    <div style="overflow-x:auto;margin:0 -24px;padding:0 24px">
+    <table class="csv-table">
+      <thead><tr>
+        <th>Campaña</th><th class="num">Imp</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">Pedidos</th><th class="num">CR</th><th class="num">Gasto</th><th class="num">ACOS</th><th>Estado</th>
+      </tr></thead><tbody>`;
+
+  // Sort by spend descending
+  const sorted = [...camps].sort((a,b) => b.spend - a.spend);
+  sorted.forEach(camp => {
+    const ctr = camp.imp > 0 ? camp.clicks / camp.imp : 0;
+    const cr = camp.clicks > 0 ? camp.orders / camp.clicks : 0;
+    const acos = camp.orders > 0 ? (camp.spend / (camp.orders * price)) * 100 : Infinity;
+    const ctrHealth = ctrH(ctr, m);
+    const crHealth = camp.clicks > 10 ? crH(cr) : 'bueno';
+    const acosHealth = camp.orders > 0 ? acosH(acos, beACOS2) : (camp.spend > 5 ? 'crítico' : 'bajo');
+    // Overall health = worst metric
+    const healths = [ctrHealth, crHealth, acosHealth];
+    const severity = {'crítico':4,'bajo':3,'alto':3,'ajustado':2,'bueno':1,'excelente':0};
+    const worst = healths.reduce((w,h2) => severity[h2] > severity[w] ? h2 : w, 'excelente');
+    const rowColor = worst === 'crítico' ? 'var(--redBg)' : worst === 'alto' || worst === 'bajo' ? 'var(--yellowBg)' : 'transparent';
+
+    h += `<tr style="background:${rowColor}">
+      <td class="camp-name-cell" title="${camp.name}">${camp.name.length > 18 ? camp.name.substring(0,18)+'…' : camp.name}</td>
+      <td class="num">${fmtI(camp.imp)}</td>
+      <td class="num">${fmtI(camp.clicks)}</td>
+      <td class="num" style="color:${acosColor(ctrHealth)}">${fmt(ctr*100,1)}%</td>
+      <td class="num">${camp.orders}</td>
+      <td class="num" style="color:${acosColor(crHealth)}">${fmt(cr*100,1)}%</td>
+      <td class="num">${c}${fmt(camp.spend)}</td>
+      <td class="num" style="color:${acos===Infinity?'var(--textDim)':acosColor(acosHealth)}">${acos===Infinity?'—':fmt(acos,0)+'%'}</td>
+      <td>${healthBadge(worst)}</td>
+    </tr>`;
+  });
+
+  // Aggregate row
+  const aggCtr = agg.imp > 0 ? agg.clicks / agg.imp : 0;
+  const aggCr = agg.clicks > 0 ? agg.orders / agg.clicks : 0;
+  const aggAcos = agg.orders > 0 ? (agg.spend / (agg.orders * price)) * 100 : Infinity;
+  h += `<tr class="csv-agg">
+    <td style="font-weight:800">TOTAL</td>
+    <td class="num">${fmtI(agg.imp)}</td>
+    <td class="num">${fmtI(agg.clicks)}</td>
+    <td class="num">${fmt(aggCtr*100,1)}%</td>
+    <td class="num">${agg.orders}</td>
+    <td class="num">${fmt(aggCr*100,1)}%</td>
+    <td class="num">${c}${fmt(agg.spend)}</td>
+    <td class="num">${aggAcos===Infinity?'—':fmt(aggAcos,0)+'%'}</td>
+    <td></td>
+  </tr>`;
+
+  h += `</tbody></table></div>`;
+
+  // Per-campaign issues
+  const issues = [];
+  sorted.forEach(camp => {
+    const ctr = camp.imp > 0 ? camp.clicks / camp.imp : 0;
+    const cr = camp.clicks > 0 ? camp.orders / camp.clicks : 0;
+    const acos = camp.orders > 0 ? (camp.spend / (camp.orders * price)) * 100 : Infinity;
+    const shortName = camp.name.length > 20 ? camp.name.substring(0,20)+'…' : camp.name;
+    if(camp.clicks > 15 && cr < .05) issues.push({icon:'🛒',sev:'alta',text:`<b>${shortName}</b> — conversión crítica (${fmt(cr*100,1)}%). Revisa listing.`});
+    if(ctr < m.ctrRange.bad && camp.imp > 500) issues.push({icon:'👁️',sev:'alta',text:`<b>${shortName}</b> — CTR muy bajo (${fmt(ctr*100,2)}%). Revisa portada/título.`});
+    if(acos > beACOS2 * 1.5 && camp.spend > 5) issues.push({icon:'💸',sev:'alta',text:`<b>${shortName}</b> — ACOS ${fmt(acos,0)}% (>1.5× break-even). Reduce pujas o pausa.`});
+    else if(acos > beACOS2 && camp.orders > 0) issues.push({icon:'⚠️',sev:'media',text:`<b>${shortName}</b> — ACOS ${fmt(acos,0)}% por encima del break-even ${beACOS2}%.`});
+    if(camp.clicks > 20 && camp.orders === 0) issues.push({icon:'🔴',sev:'alta',text:`<b>${shortName}</b> — ${camp.clicks} clicks y 0 ventas. Pausa o revisa keywords.`});
+  });
+
+  if(issues.length > 0){
+    h += `<div style="margin-top:14px;font-size:10px;font-weight:700;color:var(--textDim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Alertas por campaña:</div>`;
+    issues.slice(0,8).forEach(iss => {
+      const col = iss.sev === 'alta' ? 'var(--red)' : 'var(--orange)';
+      const bg = iss.sev === 'alta' ? 'var(--redBg)' : 'var(--yellowBg)';
+      h += `<div style="background:${bg};border-radius:8px;padding:8px 12px;margin-bottom:4px;font-size:11px;display:flex;gap:6px;align-items:center;color:${col}">
+        <span>${iss.icon}</span><span>${iss.text}</span></div>`;
+    });
+    if(issues.length > 8) h += `<div style="font-size:10px;color:var(--textDim);text-align:center;margin-top:4px">+${issues.length-8} alertas más</div>`;
+  }
+
+  // Days input for aggregate diagnostic
+  h += `<hr class="divider">
+    <div style="max-width:50%"><label class="lbl">Días de campaña (para diagnóstico)</label>
+    <input type="number" id="inp-days" value="${S.diasCamp}" min="1" max="365" placeholder="ej: 14" oninput="setVal('diasCamp',this.value)"></div>`;
+
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════
+// DIAGNOSTIC OUTPUT (real-time)
+// ═══════════════════════════════════════════════════════════
+function renderDiagOutput(){
+  const m=mp(),c=cur(),price=parseFloat(S.precio),rUnit=royaltyUnit(price),beACOS2=breakEvenACOS(price);
+  const kuI=kenpIncome(), effBE2=S.enKU&&kuI>0?effectiveBE(price):null;
+  const imp=parseInt(S.impresiones)||0,clicks=parseInt(S.clics)||0,orders=parseInt(S.pedidos)||0;
+  const spend=parseFloat(S.gastoTotal)||0,days=parseInt(S.diasCamp)||0;
+  const hasData=imp>0&&clicks>0&&spend>0&&days>0;
+
+  if(!hasData) return `<div class="card" style="text-align:center;padding:28px">
+    <div style="font-size:28px;margin-bottom:6px">📊</div>
+    <div style="font-size:14px;font-weight:600;margin-bottom:4px">Introduce tus métricas</div>
+    <div style="font-size:12px;color:var(--textMuted);line-height:1.5">Necesitas al menos impresiones, clicks, gasto y días.</div>
+  </div>`;
+
+  const ctr=clicks/imp, cr=orders/clicks, cpc=spend/clicks;
+  const acos=orders>0?(spend/(orders*price))*100:Infinity;
+  const royalties=orders*rUnit, netP=royalties-spend, spDay=spend/days;
+  const kuAdj=S.enKU&&kuI>0?royalties+(orders*.5*kuI)-spend:null;
+  const ctrHealth=ctrH(ctr,m), crHealth=crH(cr), acosHealth=acosH(acos,beACOS2), cpcHealth=cpcH(cpc,m);
+  const acCol=acosColor(acosHealth);
+  const gaugeR=56,gS=10,circ=2*Math.PI*gaugeR,dashL=circ*.75,dashF=dashL*Math.min(acos/(beACOS2*1.5),1);
+
+  let h=`<div class="card">
+    <div class="section-title">📈 Resultado</div>
+    <div style="display:flex;align-items:center;gap:18px;margin-bottom:16px">
+      <div class="gauge-ring">
+        <svg width="130" height="130" viewBox="0 0 130 130">
+          <circle cx="65" cy="65" r="${gaugeR}" fill="none" stroke="var(--border)" stroke-width="${gS}" stroke-dasharray="${dashL} ${circ}" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+          <circle cx="65" cy="65" r="${gaugeR}" fill="none" stroke="${acCol}" stroke-width="${gS}" stroke-dasharray="${dashF} ${circ}" stroke-linecap="round" transform="rotate(-90 65 65)" style="transition:stroke-dasharray .8s"/>
+        </svg>
+        <div class="gauge-center"><div style="font-size:20px;font-weight:800;color:${acCol}">${acos===Infinity?'∞':fmt(acos,1)}%</div><div style="font-size:9px;color:var(--textDim);font-weight:600">ACOS</div></div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:15px;font-weight:700;color:${acCol};margin-bottom:4px">${acos<=beACOS2?'✓ Rentable':'✗ Perdiendo dinero'}</div>
+        <div style="font-size:12px;color:var(--textMuted);line-height:1.5">
+          Break-even: <b style="color:var(--text)">${beACOS2}%</b><br>Tu ACOS: <b style="color:${acCol}">${acos===Infinity?'∞':fmt(acos,1)}%</b>
+          ${effBE2?`<br><span style="color:var(--purple)">ACOS real (KU): <b>${effBE2}%</b></span>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="result-box" style="background:${netP>=0?'var(--greenBg)':'var(--redBg)'};border:1px solid ${netP>=0?'var(--greenBorder)':'var(--redBorder)'}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;color:var(--textDim);font-weight:700;text-transform:uppercase">Beneficio neto</div>
+          <div style="font-size:22px;font-weight:800;color:${netP>=0?'var(--green)':'var(--red)'}">${netP>=0?'+':''}${c}${fmt(netP)}</div></div>
+        <div style="text-align:right;font-size:12px;color:var(--textMuted);line-height:1.6">Regalías: <b style="color:var(--green)">${c}${fmt(royalties)}</b><br>Gasto: <b style="color:var(--red)">−${c}${fmt(spend)}</b></div>
+      </div>
+    </div>
+    ${kuAdj!==null?`<div class="result-box" style="background:var(--purpleBg);border:1px solid var(--purpleBorder);margin-top:4px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;color:var(--purple);font-weight:700;text-transform:uppercase">📖 Beneficio real (incl. KU)</div>
+          <div style="font-size:20px;font-weight:800;color:${kuAdj>=0?'var(--purple)':'var(--red)'}">${kuAdj>=0?'+':''}${c}${fmt(kuAdj)}</div></div>
+        <div style="text-align:right;font-size:11px;color:var(--textMuted);line-height:1.5">~50% conv. son KU<br>+${c}${fmt(orders*.5*kuI)} KENP ocultos</div>
+      </div>
+    </div>`:''}
+    <div style="margin-top:12px">
+      <div class="diag-metric"><div><div class="diag-name">CTR</div></div><div style="display:flex;align-items:center;gap:8px"><span class="diag-value">${fmt(ctr*100,2)}%</span>${healthBadge(ctrHealth)}</div></div>
+      <div class="diag-metric"><div><div class="diag-name">Conversión</div></div><div style="display:flex;align-items:center;gap:8px"><span class="diag-value">${fmt(cr*100,1)}%</span>${healthBadge(crHealth)}</div></div>
+      <div class="diag-metric"><div><div class="diag-name">CPC medio</div></div><div style="display:flex;align-items:center;gap:8px"><span class="diag-value">${c}${fmt(cpc)}</span>${healthBadge(cpcHealth)}</div></div>
+      <div class="diag-metric"><div><div class="diag-name">ACOS</div><div style="font-size:10px;color:var(--textDim)">vs BE ${beACOS2}%</div></div><div style="display:flex;align-items:center;gap:8px"><span class="diag-value">${acos===Infinity?'∞':fmt(acos,1)}%</span>${healthBadge(acosHealth)}</div></div>
+    </div>
+  </div>
+  <div class="card"><div class="section-title">🩺 Diagnóstico</div>${generateDiagnosis(ctr,cr,cpc,acos,beACOS2,orders,clicks,days,m,c,rUnit,spDay)}</div>
+  ${acos!==Infinity&&acos>beACOS2*.75?`<div class="card"><div class="section-title">🔧 Ajuste de pujas</div>
+    <div class="result-box" style="background:var(--bgInput);border:1px solid var(--border)">
+      <div style="font-size:12px;color:var(--textMuted);margin-bottom:6px">Nueva puja = CPC × (ACOS obj. ÷ ACOS actual)</div>
+      <div style="font-size:13px;line-height:1.7">CPC: <b>${c}${fmt(cpc)}</b> · ACOS obj: <b>${fmt(beACOS2*.75,1)}%</b> · ACOS actual: <b style="color:${acCol}">${fmt(acos,1)}%</b>
+        <hr class="divider" style="margin:8px 0"><span style="font-size:16px;font-weight:800;color:var(--orange)">Nueva puja: ${c}${fmt(cpc*(beACOS2*.75/acos))}</span></div>
+    </div></div>`:''}
+  <div class="card" style="text-align:center"><button class="copy-btn" onclick="copyDiag()">📋 Copiar diagnóstico</button></div>`;
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════
+// DIAGNOSIS ENGINE
+// ═══════════════════════════════════════════════════════════
+function generateDiagnosis(ctr,cr,cpc,acos,beACOS2,orders,clicks,days,m,c,rUnit,spDay){
+  const p=[],a=[];
+  const hasCSV=S.csvCamps&&S.csvCamps.length>0;
+  const price=parseFloat(S.precio)||0;
+
+  // ── Analyze CSV campaigns for specific insights ──
+  let worstCTR=null,worstCR=null,worstACOS=null,bestCamp=null,zombies=[],burners=[];
+  if(hasCSV){
+    S.csvCamps.forEach(camp=>{
+      const campCTR=camp.imp>0?camp.clicks/camp.imp:0;
+      const campCR=camp.clicks>0?camp.orders/camp.clicks:0;
+      const campACOS=camp.orders>0&&price>0?(camp.spend/(camp.orders*price))*100:Infinity;
+      const sn=camp.name.length>25?camp.name.substring(0,25)+'…':camp.name;
+      if(camp.imp>200&&(!worstCTR||campCTR<worstCTR.v)) worstCTR={v:campCTR,n:sn,imp:camp.imp};
+      if(camp.clicks>10&&(!worstCR||campCR<worstCR.v)) worstCR={v:campCR,n:sn,clicks:camp.clicks,orders:camp.orders};
+      if(campACOS!==Infinity&&camp.spend>3&&(!worstACOS||campACOS>worstACOS.v)) worstACOS={v:campACOS,n:sn,spend:camp.spend};
+      if(campACOS!==Infinity&&campACOS<=beACOS2*.6&&camp.orders>=2&&(!bestCamp||campACOS<bestCamp.v)) bestCamp={v:campACOS,n:sn,orders:camp.orders};
+      if(camp.clicks>20&&camp.orders===0) zombies.push({n:sn,clicks:camp.clicks,spend:camp.spend});
+      if(campACOS>beACOS2*1.5&&camp.spend>5) burners.push({n:sn,acos:campACOS,spend:camp.spend});
+    });
+  }
+
+  // ── Problems & Actions ──
+  if(ctr<m.ctrRange.bad){
+    p.push({i:"👁️",s:"alta",t:`CTR muy bajo (${fmt(ctr*100,2)}%) — tus anuncios no atraen clicks`});
+    if(hasCSV&&worstCTR) a.push({i:"🎯",t:`<b>Peor CTR:</b> "${worstCTR.n}" con ${fmt(worstCTR.v*100,2)}% (${worstCTR.imp} impr.) — revisa keywords de esa campaña`});
+    a.push({i:"🎨",t:`<b>Revisa tu portada</b> — ¿destaca entre la competencia?`});
+    a.push({i:"📝",t:`<b>Revisa título y subtítulo</b> — ¿conectan con la keyword?`});
+    a.push({i:"💰",t:`<b>Compara precio</b> con los top 10 del nicho`});
+  } else if(ctr<m.ctrRange.ok){
+    p.push({i:"👁️",s:"media",t:`CTR bajo (${fmt(ctr*100,2)}%) — pocas visitas`});
+    if(hasCSV&&worstCTR) a.push({i:"🎯",t:`<b>Peor CTR:</b> "${worstCTR.n}" (${fmt(worstCTR.v*100,2)}%) — revisa o pausa`});
+    a.push({i:"🎨",t:`<b>Test A/B de portada</b> — mide cuál convierte más`});
+  }
+
+  if(clicks>15&&cr<.05){
+    p.push({i:"🛒",s:"alta",t:`Conversión muy baja (${fmt(cr*100,1)}%) — visitan pero no compran`});
+    if(hasCSV&&worstCR) a.push({i:"🎯",t:`<b>Peor conversión:</b> "${worstCR.n}" — ${worstCR.clicks} clicks → ${worstCR.orders} ventas (${fmt(worstCR.v*100,1)}%)`});
+    a.push({i:"📖",t:`<b>Mejora descripción</b> — beneficios claros, HTML bullets`});
+    a.push({i:"⭐",t:`<b>Consigue reseñas</b> — <5 reseñas mata conversión`});
+    a.push({i:"📄",t:`<b>Revisa "Look Inside"</b> — primeras páginas deben enganchar`});
+  } else if(clicks>15&&cr<.08){
+    p.push({i:"🛒",s:"media",t:`Conversión por debajo del estándar (${fmt(cr*100,1)}% vs 8-15%)`});
+    if(hasCSV&&worstCR) a.push({i:"🎯",t:`<b>Peor conversión:</b> "${worstCR.n}" (${fmt(worstCR.v*100,1)}%) — revisa listing`});
+    a.push({i:"📖",t:`<b>Reescribe descripción</b> con foco en el problema que resuelve`});
+  }
+
+  if(hasCSV&&zombies.length>0){
+    const zList=zombies.slice(0,3).map(z=>`"${z.n}" (${z.clicks} clicks, ${c}${fmt(z.spend)})`).join(', ');
+    p.push({i:"🧟",s:"alta",t:`${zombies.length} campaña${zombies.length>1?'s':''} zombi — clicks sin ventas`});
+    a.push({i:"⏸️",t:`<b>Pausa o añade negativas:</b> ${zList}${zombies.length>3?' y '+(zombies.length-3)+' más':''}`});
+  }
+
+  if(acos>beACOS2){
+    p.push({i:"💸",s:"alta",t:`ACOS ${fmt(acos,1)}% > break-even ${beACOS2}% — pierdes ${c}${fmt(spDay-(orders/Math.max(days,1))*rUnit)}/día`});
+    if(hasCSV&&burners.length>0){
+      const bList=burners.slice(0,3).map(b=>`"${b.n}" (ACOS ${fmt(b.acos,0)}%, ${c}${fmt(b.spend)})`).join(', ');
+      a.push({i:"🔥",t:`<b>Campañas quemando dinero:</b> ${bList}${burners.length>3?' y '+(burners.length-3)+' más':''}`});
+    }
+    if(!hasCSV) a.push({i:"⏸️",t:`<b>Pausa keywords</b> con >20 clicks y 0 ventas → negativas`});
+    a.push({i:"📉",t:`<b>Reduce pujas</b> con la fórmula de abajo`});
+    if(S.enKU&&kenpIncome()>0) a.push({i:"📖",t:`<b>Nota KU:</b> ACOS real es menor. Revisa panel púrpura.`});
+  } else if(acos>beACOS2*.75){
+    p.push({i:"⚠️",s:"media",t:`ACOS ajustado (${fmt(acos,1)}%) — poco margen (BE: ${beACOS2}%)`});
+    if(hasCSV&&worstACOS) a.push({i:"🔍",t:`<b>Mayor ACOS:</b> "${worstACOS.n}" (${fmt(worstACOS.v,0)}%) — revisa search terms`});
+    a.push({i:"🔍",t:`<b>Revisa search terms</b> → mueve ganadores a Manual Exacta`});
+  }
+
+  if(cpc>m.cpcRange.high){
+    p.push({i:"💶",s:"media",t:`CPC alto (${c}${fmt(cpc)} vs media ${c}${fmt(m.cpcRange.mid)})`});
+    a.push({i:"🏷️",t:`<b>Long-tail keywords</b> — menos competencia = CPC bajo`});
+  }
+
+  if(days<7) p.push({i:"⏰",s:"info",t:"<7 días — resultados no concluyentes"});
+
+  if(acos<=beACOS2*.75&&cr>=.08&&ctr>=m.ctrRange.ok){
+    p.push({i:"🎉",s:"ok",t:"¡Tu campaña va bien! Margen sano."});
+    if(hasCSV&&bestCamp) a.push({i:"🏆",t:`<b>Estrella:</b> "${bestCamp.n}" — ACOS ${fmt(bestCamp.v,0)}%, ${bestCamp.orders} ventas. ¡Escálala!`});
+    a.push({i:"📈",t:`<b>Escala:</b> sube presupuesto 20-30%`});
+    a.push({i:"🎯",t:`<b>Duplica ganadores:</b> Exactas para top 3 keywords`});
+  }
+
+  // ── CSV summary insight ──
+  if(hasCSV&&S.csvCamps.length>1){
+    const active=S.csvCamps.filter(c2=>c2.imp>0).length;
+    const profitable=S.csvCamps.filter(c2=>{const a2=c2.orders>0&&price>0?(c2.spend/(c2.orders*price))*100:Infinity;return a2<=beACOS2;}).length;
+    p.push({i:"📊",s:"info",t:`${S.csvCamps.length} campañas importadas: ${active} activas, ${profitable} rentables, ${zombies.length} zombis`});
+  }
+
+  let html='';
+  if(p.length) html+=p.map(x=>{const col=x.s==='alta'?'var(--red)':x.s==='media'?'var(--orange)':x.s==='ok'?'var(--green)':'var(--blue)';const bg=x.s==='alta'?'var(--redBg)':x.s==='media'?'var(--yellowBg)':x.s==='ok'?'var(--greenBg)':'var(--blueBg)';return`<div style="background:${bg};border-radius:8px;padding:10px 14px;margin-bottom:6px;font-size:12px;display:flex;gap:8px;align-items:center;color:${col}"><span style="font-size:16px">${x.i}</span><span style="font-weight:600">${x.t}</span></div>`;}).join('');
+  if(a.length){html+=`<div style="margin-top:12px;font-size:11px;font-weight:700;color:var(--textDim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Acciones recomendadas${hasCSV?' (basadas en tus campañas)':''}</div>`;html+=a.map(x=>`<div class="tip"><span style="font-size:15px;flex-shrink:0">${x.i}</span><span>${x.t}</span></div>`).join('');}
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// LIVE UPDATE
+// ═══════════════════════════════════════════════════════════
+function updateLive(){
+  const royBox=$("live-royalty");
+  if(royBox){
+    const price=parseFloat(S.precio)||0;
+    if(price>0){const m2=mp(),c2=cur(),rate=royaltyRate(price),rUnit=royaltyUnit(price),be=breakEvenACOS(price),inB=price>=m2.royalty.high.min&&price<=m2.royalty.high.max;
+      royBox.innerHTML=`<div class="grid-3" style="margin-bottom:8px">
+        <div class="kpi-box"><div class="kpi-label">Regalía</div><div class="kpi-value" style="color:var(--green)">${c2}${fmt(rUnit)}</div><div style="font-size:10px;color:var(--textDim)">${fmt(rate*100,0)}%</div></div>
+        <div class="kpi-box"><div class="kpi-label">ACOS Break-even</div><div class="kpi-value" style="color:var(--orange)">${be}%</div><div style="font-size:10px;color:var(--textDim)">${c2}${fmt(rUnit)} ÷ ${c2}${fmt(price)} × 100</div></div>
+        <div class="kpi-box"><div class="kpi-label">Banda</div><div class="kpi-value" style="font-size:15px;color:${inB?'var(--green)':'var(--amber)'}">${inB?'70%':'35%'}</div><div style="font-size:10px;color:var(--textDim)">${inB?'✓ Óptima':'⚠️ Baja'}</div></div>
+      </div>${!inB?`<div class="tip" style="margin:0"><span>💡</span><span>Ajusta entre <b>${c2}${m2.royalty.high.min}–${c2}${m2.royalty.high.max}</b> para <b>70% regalía</b>.</span></div>`:''}`;
+    } else royBox.innerHTML='';
+  }
+  const kenpBox=$("live-kenp");
+  if(kenpBox){const pg=parseInt(S.paginasKENP)||0,c2=cur();
+    if(pg>0){const ki=kenpIncome();kenpBox.innerHTML=`<div class="kpi-box" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--purpleBorder);background:var(--purpleBg)">
+      <div><div style="font-size:10px;color:var(--purple);font-weight:700">Ingreso KU</div><div style="font-size:9px;color:var(--textDim)">${pg}pág × ${c2}${mp().kenpRate}</div></div>
+      <div style="font-size:20px;font-weight:800;color:var(--purple)">${c2}${fmt(ki)}</div></div>`;}
+    else kenpBox.innerHTML='';
+  }
+  const navN=$("nav-next"); if(navN) navN.disabled=!(parseFloat(S.precio)>0);
+  const diagBox=$("live-diag"); if(diagBox&&S.step===2&&S.modo==="diagnosticar") diagBox.innerHTML=renderDiagOutput();
+}
+
+// ═══════════════════════════════════════════════════════════
+// DRAG & DROP
+// ═══════════════════════════════════════════════════════════
+function bindDropZone(){
+  const dz = $("drop-zone");
+  if(!dz) return;
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if(file) handleCSVFile(file);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// COPY FUNCTIONS
+// ═══════════════════════════════════════════════════════════
+function copyPlan(){
+  const m2=mp(),c=cur(),price=parseFloat(S.precio),rUnit=royaltyUnit(price),be=breakEvenACOS(price);
+  const budget=parseFloat(S.presupuestoDia)||m2.launchBudgetRec,tACOS=+(be*.75).toFixed(1),mk=S.marketplace;
+  const maxCPC2=+(rUnit*m2.crRange.mid).toFixed(2),isD15=S.fase==="d15",bKey=isD15?'budgetD15':'budgetD0';
+  let t=`🎯 PILOTO DE ADS KDP — Jirafa Royalties\n═══════════════════════════════════════\n\n`;
+  t+=`📖 LIBRO: ${c}${fmt(price)} → Regalía ${c}${fmt(rUnit)} (${fmt(royaltyRate(price)*100,0)}%)\n`;
+  if(S.enKU&&kenpIncome()>0) t+=`📖 KU: Sí → ${c}${fmt(kenpIncome())}/préstamo (${S.paginasKENP} pág)\n`;
+  t+=`📋 ${m2.label} | Fase: ${isD15?'Día 15+':'Día 0'}\n\n⚙️ DASHBOARD:\n• ACOS objetivo: ${tACOS}%\n• CPC máx: ${c}${fmt(maxCPC2)}\n• Ppto/día: ${c}${fmt(budget,0)}\n• ACOS BE: ${be}%\n\n🚀 CAMPAÑAS:\n`;
+  LAUNCH_CAMPS.forEach(camp=>{const bid=camp.bids[mk],adj=camp.adjust>0?'+'+camp.adjust+'%':'—',bp=camp[bKey],bd=+(budget*bp).toFixed(2);
+    t+=`${camp.icon} ${camp.name}: Puja ${c}${fmt(bid)} | Ajuste ${adj} | Ppto ${c}${fmt(bd)}/día${bp===0?' [inactiva]':''}\n   → ${camp.kw}\n`;});
+  t+=`\n⚡ REGLAS:\n• Pausa >20 clicks, 0 ventas\n• ACOS>${be}%: Puja=CPC×(${tACOS}÷ACOS)\n• ACOS<${tACOS}%: +20% ppto\n• Ganadores Auto→Exacta\n`;
+  clipCopy(t,'.copy-btn');
+}
+
+function copyDiag(){
+  const m2=mp(),c=cur(),price=parseFloat(S.precio);
+  const imp=parseInt(S.impresiones)||0,clicks=parseInt(S.clics)||0,orders=parseInt(S.pedidos)||0,spend=parseFloat(S.gastoTotal)||0,days=parseInt(S.diasCamp)||1;
+  const ctr=imp>0?clicks/imp:0,cr=clicks>0?orders/clicks:0,cpc=clicks>0?spend/clicks:0;
+  const acos=orders>0?(spend/(orders*price))*100:Infinity,be=breakEvenACOS(price),roys=orders*royaltyUnit(price);
+  let t=`🩺 DIAGNÓSTICO ADS — Jirafa Royalties\n═══════════════════════════════════════\n\n`;
+  t+=`📖 ${c}${fmt(price)} | Regalía: ${c}${fmt(royaltyUnit(price))}\n`;
+  if(S.enKU&&kenpIncome()>0) t+=`📖 KU: ${c}${fmt(kenpIncome())}/préstamo\n`;
+  t+=`📅 ${days} días\n\n📊 MÉTRICAS:\n• Imp: ${fmtI(imp)} • Clicks: ${fmtI(clicks)} (CTR: ${fmt(ctr*100,2)}%)\n• Pedidos: ${orders} (CR: ${fmt(cr*100,1)}%)\n• CPC: ${c}${fmt(cpc)} • ACOS: ${acos===Infinity?'∞':fmt(acos,1)}% (BE: ${be}%)\n\n💰 P&L:\n• Gasto: ${c}${fmt(spend)} • Regalías: ${c}${fmt(roys)}\n• Neto: ${roys-spend>=0?'+':''}${c}${fmt(roys-spend)}\n`;
+  if(S.enKU&&kenpIncome()>0){const kuA=roys+(orders*.5*kenpIncome())-spend;t+=`• Neto KU: ${kuA>=0?'+':''}${c}${fmt(kuA)}\n`;}
+
+  // Add per-campaign data if CSV loaded
+  if(S.csvCamps&&S.csvCamps.length>0){
+    t+=`\n📋 POR CAMPAÑA (${S.csvCamps.length}):\n`;
+    S.csvCamps.sort((a,b)=>b.spend-a.spend).forEach(camp=>{
+      const ctr2=camp.imp>0?camp.clicks/camp.imp:0,cr2=camp.clicks>0?camp.orders/camp.clicks:0;
+      const acos2=camp.orders>0?(camp.spend/(camp.orders*price))*100:Infinity;
+      t+=`• ${camp.name}: ${fmtI(camp.imp)} imp | ${camp.clicks} clicks | ${camp.orders} ventas | ${c}${fmt(camp.spend)} | ACOS ${acos2===Infinity?'—':fmt(acos2,0)+'%'}\n`;
+    });
+  }
+  clipCopy(t,'.copy-btn');
+}
+
+function clipCopy(txt,sel){navigator.clipboard.writeText(txt).then(()=>{const btn=document.querySelector(sel);if(btn){btn.innerHTML='✅ Copiado';setTimeout(()=>render(),2000);}});}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+loadState();
+render();
+</script>
+<footer style="max-width:560px;margin:32px auto 0;padding:18px 0;border-top:1px solid #44403C;text-align:center">
+<p style="font-size:12px;color:#78716C;margin-bottom:8px">Herramienta de <strong style="color:#F97316">El Sistema Jirafa</strong></p>
+<a href="/validador" style="color:#A8A29E;font-size:12px;text-decoration:none;border:1px solid #44403C;border-radius:6px;padding:6px 14px;display:inline-block;transition:all .15s" onmouseover="this.style.borderColor='#F97316';this.style.color='#F97316'" onmouseout="this.style.borderColor='#44403C';this.style.color='#A8A29E'">&larr; Validador de Nichos</a>
+</footer>
+</body>
+</html>
